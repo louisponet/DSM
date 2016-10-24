@@ -1,0 +1,30 @@
+﻿  gdismainwindow.cpp
+  moc_atomwindow.cpp
+  moc_createstructurewindow.cpp
+  moc_gdismainwindow.cpp
+  moc_glwidget.cpp
+  moc_tablewidget.cpp
+  moc_treewidget.cpp
+  main.cpp
+  particle.cpp
+  structure.cpp
+  objreader.cpp
+  qeIO.cpp
+  global.cpp
+  camera.cpp
+  generator.cpp
+  glwidget.cpp
+  shader.cpp
+  Cube.cpp
+  cylinder.cpp
+  renderable3D.cpp
+  Generating Code...
+  Compiling...
+  sphere.cpp
+  tablewidget.cpp
+  treewidget.cpp
+  atomwindow.cpp
+  createstructurewindow.cpp
+  Generating Code...
+  qrc_gdismainwindow.cpp
+  gdisTest3.vcxproj -> C:\Users\ponet\Source\Repos\gdisCpp\gdisTest3\Win32\Release\gdisTest3.exe

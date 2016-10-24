@@ -1,0 +1,78 @@
+
+    &CONTROL
+calculation = 'scf'
+prefix='SnzW4_SOC'
+pseudo_dir = '/home/student/Private/Louis/Pseudo'
+outdir='./'
+tstress=.true.
+tprnfor = .true.
+forc_conv_thr=1.0d-3
+nstep=400
+wf_collect=.true.
+/
+    &SYSTEM
+ibrav=0
+celldm(1)=1.889726
+nat=20
+ntyp=4
+ecutwfc=50
+ecutrho=400
+occupations='smearing'
+smearing='mp'
+degauss=0.01
+noncolin=.true.
+lspinorb=.true.
+starting_magnetization(1)=0.0001
+starting_magnetization(2)=0.1
+starting_magnetization(3)=0.1
+angle1(1)=1
+angle2(1)=1
+angle1(2)=1
+angle2(2)=1
+angle1(3)=180
+angle2(3)=1
+/
+    &ELECTRONS
+mixing_beta=0.3
+conv_thr =  1.0d-7
+electron_maxstep=750
+/
+    &IONS
+trust_radius_max=0.2
+/
+    &CELL
+cell_dynamics='bfgs'
+/
+ATOMIC_SPECIES
+Sn  118.709999  PROVIDE .UPF FILE HERE
+H  1.0079  PROVIDE .UPF FILE HERE
+
+CELL_PARAMETERS (alat)
+10.0900595  0  0
+0  26.6426112  0
+0  0  9.362422
+
+ATOMIC_POSITIONS (crystal)
+Sn	0.480153888  0.239837304  0.16044645
+Sn	0.627607171  0.358502552  0.910660386
+Sn	0.581596136  0.43753323  0.160566181
+Sn	0.578496099  0.284372896  0.910098076
+Sn	0.490620941  0.538317025  0.660501957
+Sn	0.503703296  0.691442311  0.411352962
+Sn	0.604444146  0.735176027  0.661846519
+Sn	0.577249587  0.588484466  0.410929501
+Sn	0.479597241  0.239713579  0.66002506
+Sn	0.498893172  0.386750937  0.410507262
+Sn	0.601121724  0.446880668  0.660681248
+Sn	0.578740835  0.284543961  0.410457909
+Sn	0.490958542  0.538362682  0.161028102
+Sn	0.503597677  0.691079676  0.91151762
+Sn	0.604954839  0.735142887  0.161146075
+Sn	0.576829672  0.588191152  0.910716414
+H	0.512933791  0.174827144  0.659102976
+H	0.512735784  0.174901769  0.160386086
+H	0.575424314  0.800346673  0.663588822
+H	0.575892985  0.800315797  0.160856277
+
+K_POINTS {automatic}
+ 1 1 12  1 1 1
