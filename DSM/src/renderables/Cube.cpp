@@ -1,17 +1,19 @@
-
+#ifdef __APPLE__
+#include <CoreFoundation/CoreFoundation.h>
+#endif
 #include <cmath>
 #include "../global.h"
 #include "Cube.h"
 #include "../fileio/objreader.h"
 #include "../utils/maths.h"
 
-Cube::Cube(glm::vec3&  vector1, glm::vec3&  vector2, float width, glm::vec3& colour1):
+Cube::Cube(glm::vec3  vector1, glm::vec3  vector2, float width, glm::vec3 colour1):
 	Renderable3D(BaseCube::instance()->getVertices(), BaseCube::instance()->getNormals(), BaseCube::instance()->getIndices(), colour1, 0.9f, 10.0f),v1(vector1),v2(vector2),width(width)
 {
 	genMat();
 }
 
-Cube::Cube():Renderable3D(glm::vec3(1.0f), 0.9f, 0.9f)
+Cube::Cube():Renderable3D(glm::vec3(1.0f), 0.0001f, 10.0f)
 {
 	initInfo();
 }
@@ -42,5 +44,6 @@ void Cube::initInfo()
 	vertices.reserve(8);
 	normals.reserve(8);
 	indices.reserve(36);
-	reader.loadOBJ("src/renderables/cube.txt", vertices, indices, normals);
+    reader.loadOBJ("src/renderables/cube.txt", vertices, indices, normals);
+
 }

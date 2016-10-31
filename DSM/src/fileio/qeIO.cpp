@@ -1,9 +1,12 @@
+#ifdef __APPLE__
+#include <CoreFoundation/CoreFoundation.h>
+#endif
 #include <vector>
 #include <string>
-#include <QTextStream>
-#include <QFileDialog>
-#include <QTextCodec>
-#include <QFile>
+#include <QtCore/QTextStream>
+#include <QtWidgets/QFileDialog>
+#include <QtCore/QTextCodec>
+#include <QtCore/QFile>
 #include "qeIO.h"
 
 qeRW::qeRW()
@@ -36,7 +39,7 @@ bool qeRW::loadIN(QString& path, std::vector<Particle> &out_atoms, glm::dmat3 &o
 		QString line = in.readLine();
 		if (line.contains("nat"))
 		{
-			natoms = line.mid(line.indexOf("nat") + 4).toInt();
+            natoms = line.split("=",QString::SkipEmptyParts)[1].toInt();
 		}
 		if (line.contains("CELL_PARAMETERS"))
 		{
@@ -106,7 +109,19 @@ bool qeRW::saveStructure(Structure* structure,bool saveAs)
 		}
 		else
 		{
-			inFile.setFileName("src/fileio/templates/pw.in");
+#ifdef __APPLE__
+            CFURLRef appUrlRef;
+	    	appUrlRef = CFBundleCopyResourceURL(CFBundleGetMainBundle(),CFSTR("/src/fileio/templates/pw.in"),NULL,NULL);
+	    	CFStringRef filePathRef = CFURLCopyPath(appUrlRef);
+	    	const char* pathString = CFStringGetCStringPtr(filePathRef,kCFStringEncodingUTF8);
+#else 
+			const char* pathString = "/src/fileio/templates/pw.in";
+#endif
+            inFile.setFileName(pathString);
+#ifdef __APPLE__
+            CFRelease(appUrlRef);
+	    	CFRelease(filePathRef);
+#endif
 			QString filename = QFileDialog::getSaveFileName(NULL, QFileDialog::tr("Save File"), "", QFileDialog::tr("Text files(*.txt;*.in)"));
 			outFile.setFileName(filename);
 			structure->file = filename;
@@ -124,7 +139,20 @@ bool qeRW::saveStructure(Structure* structure,bool saveAs)
 		}
 		else
 		{
-			inFile.setFileName("src/fileio/templates/pw.in");
+
+#ifdef __APPLE__
+            CFURLRef appUrlRef;
+            appUrlRef = CFBundleCopyResourceURL(CFBundleGetMainBundle(),CFSTR("/src/fileio/templates/pw.in"),NULL,NULL);
+            CFStringRef filePathRef = CFURLCopyPath(appUrlRef);
+            const char* pathString = CFStringGetCStringPtr(filePathRef,kCFStringEncodingUTF8);
+#else
+			const char* pathString = "src/fileio/templates/pw.in";
+#endif
+            inFile.setFileName(pathString);
+#ifdef __APPLE__
+            CFRelease(appUrlRef);
+            CFRelease(filePathRef);
+#endif
 			QString filename = QFileDialog::getSaveFileName(NULL, QFileDialog::tr("Save File"), "", QFileDialog::tr("Text files(*.txt;*.in)"));
 			outFile.setFileName(filename);
 			structure->file = filename;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QTreeWidget>
+#include <QtWidgets/QTreeWidget>
 
 #include "../entities/structure.h"
 
@@ -12,6 +12,7 @@ public:
 	~TreeWidget();
 	void addStructure(Structure* structure);
 	void removeStructure(Structure* structure);
+    void updateStructure(Structure* structure);
 	void deselect();
 
 private:

@@ -1,7 +1,10 @@
 #pragma once
-#include <QWidget>
-
+#include <QtWidgets/QWidget>
+#ifdef __APPLE__
+#include "../../ui_createstructurewindow.h"
+#else
 #include "ui_createstructurewindow.h"
+#endif
 #include "atomwindow.h"
 #include "../entities/structure.h"
 

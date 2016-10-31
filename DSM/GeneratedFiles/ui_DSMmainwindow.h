@@ -17,6 +17,7 @@
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
@@ -41,9 +42,13 @@ public:
     QAction *actionSave_Structure;
     QAction *actionSave_Structure_As;
     QAction *actionEdit_Structure;
+    QAction *actionCalculate_Ideal_positions;
+    QAction *actionSettings;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
+    GLWidget *openGLWidget;
     TreeWidget *treeWidget;
+    TableWidget *tableWidget;
     QTabWidget *tabWidget;
     QWidget *tab1;
     QLabel *label;
@@ -60,10 +65,12 @@ public:
     QLabel *label_6;
     QWidget *tab_2;
     QCheckBox *checkBox;
-    QCheckBox *checkBox_2;
-    QCheckBox *checkBox_3;
-    GLWidget *openGLWidget;
-    TableWidget *tableWidget;
+    QLabel *label_7;
+    QLineEdit *lineEdit;
+    QLabel *label_8;
+    QLabel *label_9;
+    QLineEdit *lineEdit_2;
+    QLineEdit *lineEdit_3;
     QMenuBar *menuBar;
     QMenu *menuOpen_Structure;
     QMenu *menuTools;
@@ -92,6 +99,10 @@ public:
         actionSave_Structure_As->setObjectName(QStringLiteral("actionSave_Structure_As"));
         actionEdit_Structure = new QAction(DSMmainwindowClass);
         actionEdit_Structure->setObjectName(QStringLiteral("actionEdit_Structure"));
+        actionCalculate_Ideal_positions = new QAction(DSMmainwindowClass);
+        actionCalculate_Ideal_positions->setObjectName(QStringLiteral("actionCalculate_Ideal_positions"));
+        actionSettings = new QAction(DSMmainwindowClass);
+        actionSettings->setObjectName(QStringLiteral("actionSettings"));
         centralWidget = new QWidget(DSMmainwindowClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -99,6 +110,11 @@ public:
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
         gridLayout->setVerticalSpacing(0);
+        openGLWidget = new GLWidget(centralWidget);
+        openGLWidget->setObjectName(QStringLiteral("openGLWidget"));
+
+        gridLayout->addWidget(openGLWidget, 0, 1, 3, 1);
+
         treeWidget = new TreeWidget(centralWidget);
         QTreeWidgetItem *__qtreewidgetitem = new QTreeWidgetItem();
         __qtreewidgetitem->setText(0, QStringLiteral("1"));
@@ -108,6 +124,56 @@ public:
         treeWidget->header()->setVisible(false);
 
         gridLayout->addWidget(treeWidget, 0, 0, 1, 1);
+
+        tableWidget = new TableWidget(centralWidget);
+        if (tableWidget->columnCount() < 1)
+            tableWidget->setColumnCount(1);
+        QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
+        tableWidget->setHorizontalHeaderItem(0, __qtablewidgetitem);
+        if (tableWidget->rowCount() < 6)
+            tableWidget->setRowCount(6);
+        QTableWidgetItem *__qtablewidgetitem1 = new QTableWidgetItem();
+        tableWidget->setVerticalHeaderItem(0, __qtablewidgetitem1);
+        QTableWidgetItem *__qtablewidgetitem2 = new QTableWidgetItem();
+        tableWidget->setVerticalHeaderItem(1, __qtablewidgetitem2);
+        QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
+        tableWidget->setVerticalHeaderItem(2, __qtablewidgetitem3);
+        QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
+        tableWidget->setVerticalHeaderItem(3, __qtablewidgetitem4);
+        QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
+        tableWidget->setVerticalHeaderItem(4, __qtablewidgetitem5);
+        QTableWidgetItem *__qtablewidgetitem6 = new QTableWidgetItem();
+        tableWidget->setVerticalHeaderItem(5, __qtablewidgetitem6);
+        QTableWidgetItem *__qtablewidgetitem7 = new QTableWidgetItem();
+        tableWidget->setItem(0, 0, __qtablewidgetitem7);
+        QTableWidgetItem *__qtablewidgetitem8 = new QTableWidgetItem();
+        tableWidget->setItem(1, 0, __qtablewidgetitem8);
+        QTableWidgetItem *__qtablewidgetitem9 = new QTableWidgetItem();
+        tableWidget->setItem(2, 0, __qtablewidgetitem9);
+        QTableWidgetItem *__qtablewidgetitem10 = new QTableWidgetItem();
+        tableWidget->setItem(3, 0, __qtablewidgetitem10);
+        QTableWidgetItem *__qtablewidgetitem11 = new QTableWidgetItem();
+        tableWidget->setItem(4, 0, __qtablewidgetitem11);
+        QTableWidgetItem *__qtablewidgetitem12 = new QTableWidgetItem();
+        tableWidget->setItem(5, 0, __qtablewidgetitem12);
+        tableWidget->setObjectName(QStringLiteral("tableWidget"));
+        tableWidget->setMinimumSize(QSize(300, 280));
+        tableWidget->setMaximumSize(QSize(300, 242));
+        tableWidget->setLineWidth(1);
+        tableWidget->setAlternatingRowColors(false);
+        tableWidget->setShowGrid(true);
+        tableWidget->setColumnCount(1);
+        tableWidget->horizontalHeader()->setVisible(true);
+        tableWidget->horizontalHeader()->setCascadingSectionResizes(false);
+        tableWidget->horizontalHeader()->setDefaultSectionSize(200);
+        tableWidget->horizontalHeader()->setProperty("showSortIndicator", QVariant(false));
+        tableWidget->horizontalHeader()->setStretchLastSection(true);
+        tableWidget->verticalHeader()->setCascadingSectionResizes(false);
+        tableWidget->verticalHeader()->setDefaultSectionSize(40);
+        tableWidget->verticalHeader()->setProperty("showSortIndicator", QVariant(false));
+        tableWidget->verticalHeader()->setStretchLastSection(true);
+
+        gridLayout->addWidget(tableWidget, 1, 0, 1, 1);
 
         tabWidget = new QTabWidget(centralWidget);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
@@ -164,87 +230,34 @@ public:
         tab_2->setObjectName(QStringLiteral("tab_2"));
         checkBox = new QCheckBox(tab_2);
         checkBox->setObjectName(QStringLiteral("checkBox"));
-        checkBox->setGeometry(QRect(10, 80, 111, 23));
+        checkBox->setGeometry(QRect(10, 20, 111, 23));
         checkBox->setTristate(false);
-        checkBox_2 = new QCheckBox(tab_2);
-        checkBox_2->setObjectName(QStringLiteral("checkBox_2"));
-        checkBox_2->setGeometry(QRect(10, 110, 111, 23));
-        checkBox_2->setTristate(false);
-        checkBox_3 = new QCheckBox(tab_2);
-        checkBox_3->setObjectName(QStringLiteral("checkBox_3"));
-        checkBox_3->setGeometry(QRect(10, 140, 121, 21));
-        checkBox_3->setTristate(false);
+        label_7 = new QLabel(tab_2);
+        label_7->setObjectName(QStringLiteral("label_7"));
+        label_7->setGeometry(QRect(120, 20, 81, 23));
+        lineEdit = new QLineEdit(tab_2);
+        lineEdit->setObjectName(QStringLiteral("lineEdit"));
+        lineEdit->setGeometry(QRect(220, 20, 71, 24));
+        label_8 = new QLabel(tab_2);
+        label_8->setObjectName(QStringLiteral("label_8"));
+        label_8->setGeometry(QRect(120, 50, 101, 23));
+        label_9 = new QLabel(tab_2);
+        label_9->setObjectName(QStringLiteral("label_9"));
+        label_9->setGeometry(QRect(120, 80, 81, 23));
+        lineEdit_2 = new QLineEdit(tab_2);
+        lineEdit_2->setObjectName(QStringLiteral("lineEdit_2"));
+        lineEdit_2->setGeometry(QRect(220, 50, 71, 24));
+        lineEdit_3 = new QLineEdit(tab_2);
+        lineEdit_3->setObjectName(QStringLiteral("lineEdit_3"));
+        lineEdit_3->setGeometry(QRect(220, 80, 71, 24));
         tabWidget->addTab(tab_2, QString());
 
         gridLayout->addWidget(tabWidget, 2, 0, 1, 1);
 
-        openGLWidget = new GLWidget(centralWidget);
-        openGLWidget->setObjectName(QStringLiteral("openGLWidget"));
-        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(openGLWidget->sizePolicy().hasHeightForWidth());
-        openGLWidget->setSizePolicy(sizePolicy);
-        openGLWidget->setMinimumSize(QSize(1280, 720));
-        openGLWidget->setBaseSize(QSize(0, 0));
-        openGLWidget->setFocusPolicy(Qt::StrongFocus);
-
-        gridLayout->addWidget(openGLWidget, 0, 2, 4, 1);
-
-        tableWidget = new TableWidget(centralWidget);
-        if (tableWidget->columnCount() < 1)
-            tableWidget->setColumnCount(1);
-        QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(0, __qtablewidgetitem);
-        if (tableWidget->rowCount() < 6)
-            tableWidget->setRowCount(6);
-        QTableWidgetItem *__qtablewidgetitem1 = new QTableWidgetItem();
-        tableWidget->setVerticalHeaderItem(0, __qtablewidgetitem1);
-        QTableWidgetItem *__qtablewidgetitem2 = new QTableWidgetItem();
-        tableWidget->setVerticalHeaderItem(1, __qtablewidgetitem2);
-        QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
-        tableWidget->setVerticalHeaderItem(2, __qtablewidgetitem3);
-        QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
-        tableWidget->setVerticalHeaderItem(3, __qtablewidgetitem4);
-        QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
-        tableWidget->setVerticalHeaderItem(4, __qtablewidgetitem5);
-        QTableWidgetItem *__qtablewidgetitem6 = new QTableWidgetItem();
-        tableWidget->setVerticalHeaderItem(5, __qtablewidgetitem6);
-        QTableWidgetItem *__qtablewidgetitem7 = new QTableWidgetItem();
-        tableWidget->setItem(0, 0, __qtablewidgetitem7);
-        QTableWidgetItem *__qtablewidgetitem8 = new QTableWidgetItem();
-        tableWidget->setItem(1, 0, __qtablewidgetitem8);
-        QTableWidgetItem *__qtablewidgetitem9 = new QTableWidgetItem();
-        tableWidget->setItem(2, 0, __qtablewidgetitem9);
-        QTableWidgetItem *__qtablewidgetitem10 = new QTableWidgetItem();
-        tableWidget->setItem(3, 0, __qtablewidgetitem10);
-        QTableWidgetItem *__qtablewidgetitem11 = new QTableWidgetItem();
-        tableWidget->setItem(4, 0, __qtablewidgetitem11);
-        QTableWidgetItem *__qtablewidgetitem12 = new QTableWidgetItem();
-        tableWidget->setItem(5, 0, __qtablewidgetitem12);
-        tableWidget->setObjectName(QStringLiteral("tableWidget"));
-        tableWidget->setMinimumSize(QSize(300, 280));
-        tableWidget->setMaximumSize(QSize(320, 242));
-        tableWidget->setLineWidth(1);
-        tableWidget->setAlternatingRowColors(false);
-        tableWidget->setShowGrid(true);
-        tableWidget->setColumnCount(1);
-        tableWidget->horizontalHeader()->setVisible(true);
-        tableWidget->horizontalHeader()->setCascadingSectionResizes(false);
-        tableWidget->horizontalHeader()->setDefaultSectionSize(200);
-        tableWidget->horizontalHeader()->setProperty("showSortIndicator", QVariant(false));
-        tableWidget->horizontalHeader()->setStretchLastSection(true);
-        tableWidget->verticalHeader()->setCascadingSectionResizes(false);
-        tableWidget->verticalHeader()->setDefaultSectionSize(40);
-        tableWidget->verticalHeader()->setProperty("showSortIndicator", QVariant(false));
-        tableWidget->verticalHeader()->setStretchLastSection(true);
-
-        gridLayout->addWidget(tableWidget, 1, 0, 1, 1);
-
         DSMmainwindowClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(DSMmainwindowClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1657, 31));
+        menuBar->setGeometry(QRect(0, 0, 1657, 22));
         menuOpen_Structure = new QMenu(menuBar);
         menuOpen_Structure->setObjectName(QStringLiteral("menuOpen_Structure"));
         menuTools = new QMenu(menuBar);
@@ -264,8 +277,10 @@ public:
         menuOpen_Structure->addAction(actionSave_Structure_As);
         menuOpen_Structure->addAction(actionClose_Structure);
         menuOpen_Structure->addSeparator();
+        menuOpen_Structure->addAction(actionSettings);
         menuTools->addAction(actionCreate_new_Structure);
         menuTools->addAction(actionEdit_Structure);
+        menuTools->addSeparator();
         mainToolBar->addAction(actionOpen_Structure);
 
         retranslateUi(DSMmainwindowClass);
@@ -275,14 +290,17 @@ public:
         QObject::connect(spinBox_4, SIGNAL(valueChanged(int)), DSMmainwindowClass, SLOT(setPosV2ImageCounter(int)));
         QObject::connect(spinBox_5, SIGNAL(valueChanged(int)), DSMmainwindowClass, SLOT(setNegV3ImageCounter(int)));
         QObject::connect(spinBox_6, SIGNAL(valueChanged(int)), DSMmainwindowClass, SLOT(setPosV3ImageCounter(int)));
-        QObject::connect(openGLWidget, SIGNAL(mouseClicked(glm::vec4,glm::vec3,glm::mat4)), DSMmainwindowClass, SLOT(mouseClicked(glm::vec4,glm::vec3,glm::mat4)));
-        QObject::connect(openGLWidget, SIGNAL(atomMoved(glm::vec3)), DSMmainwindowClass, SLOT(atomMoved(glm::vec3)));
         QObject::connect(mainToolBar, SIGNAL(actionTriggered(QAction*)), DSMmainwindowClass, SLOT(openStructure()));
         QObject::connect(tableWidget, SIGNAL(itemChanged(QTableWidgetItem*)), DSMmainwindowClass, SLOT(atomInfoEdited(QTableWidgetItem*)));
         QObject::connect(treeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)), DSMmainwindowClass, SLOT(treewidgetSelection(QTreeWidgetItem*)));
         QObject::connect(menuBar, SIGNAL(triggered(QAction*)), DSMmainwindowClass, SLOT(menuActionTriggered(QAction*)));
+        QObject::connect(openGLWidget, SIGNAL(atomMoved(glm::vec3)), DSMmainwindowClass, SLOT(atomMoved(glm::vec3)));
+        QObject::connect(openGLWidget, SIGNAL(mouseClicked(glm::vec4,glm::vec3,glm::mat4)), DSMmainwindowClass, SLOT(mouseClicked(glm::vec4,glm::vec3,glm::mat4)));
+        QObject::connect(lineEdit, SIGNAL(textEdited(QString)), DSMmainwindowClass, SLOT(atomScaleChanged(QString)));
+        QObject::connect(lineEdit_2, SIGNAL(textEdited(QString)), DSMmainwindowClass, SLOT(bondScaleChanged(QString)));
+        QObject::connect(lineEdit_3, SIGNAL(textEdited(QString)), DSMmainwindowClass, SLOT(covaScaleChanged(QString)));
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(DSMmainwindowClass);
@@ -290,28 +308,24 @@ public:
 
     void retranslateUi(QMainWindow *DSMmainwindowClass)
     {
-        DSMmainwindowClass->setWindowTitle(QApplication::translate("DSMmainwindowClass", "gdismainwindow", 0));
+        DSMmainwindowClass->setWindowTitle(QApplication::translate("DSMmainwindowClass", "DSM", 0));
         actionOpen_Structure->setText(QApplication::translate("DSMmainwindowClass", "Open Structure", 0));
 #ifndef QT_NO_TOOLTIP
         actionOpen_Structure->setToolTip(QApplication::translate("DSMmainwindowClass", "Open Structure", 0));
 #endif // QT_NO_TOOLTIP
         actionCreate_new_Structure->setText(QApplication::translate("DSMmainwindowClass", "Create new Structure", 0));
+        actionCreate_new_Structure->setShortcut(QApplication::translate("DSMmainwindowClass", "Ctrl+N", 0));
         actionOpen_File->setText(QApplication::translate("DSMmainwindowClass", "Open File", 0));
+        actionOpen_File->setShortcut(QApplication::translate("DSMmainwindowClass", "Ctrl+O", 0));
         actionClose_Structure->setText(QApplication::translate("DSMmainwindowClass", "Close", 0));
+        actionClose_Structure->setShortcut(QApplication::translate("DSMmainwindowClass", "Ctrl+W", 0));
         actionSave_Structure->setText(QApplication::translate("DSMmainwindowClass", "Save", 0));
+        actionSave_Structure->setShortcut(QApplication::translate("DSMmainwindowClass", "Ctrl+S", 0));
         actionSave_Structure_As->setText(QApplication::translate("DSMmainwindowClass", "Save As", 0));
         actionEdit_Structure->setText(QApplication::translate("DSMmainwindowClass", "Edit Structure", 0));
-        label->setText(QApplication::translate("DSMmainwindowClass", "Images:", 0));
-        label_2->setText(QApplication::translate("DSMmainwindowClass", "-", 0));
-        label_3->setText(QApplication::translate("DSMmainwindowClass", "+", 0));
-        label_4->setText(QApplication::translate("DSMmainwindowClass", "v1:", 0));
-        label_5->setText(QApplication::translate("DSMmainwindowClass", "v2:", 0));
-        label_6->setText(QApplication::translate("DSMmainwindowClass", "v3:", 0));
-        tabWidget->setTabText(tabWidget->indexOf(tab1), QApplication::translate("DSMmainwindowClass", "Images", 0));
-        checkBox->setText(QApplication::translate("DSMmainwindowClass", "Hide Cells", 0));
-        checkBox_2->setText(QApplication::translate("DSMmainwindowClass", "Hide Cells", 0));
-        checkBox_3->setText(QApplication::translate("DSMmainwindowClass", "Hide Cells", 0));
-        tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("DSMmainwindowClass", "Options", 0));
+        actionEdit_Structure->setShortcut(QApplication::translate("DSMmainwindowClass", "Ctrl+E", 0));
+        actionCalculate_Ideal_positions->setText(QApplication::translate("DSMmainwindowClass", "Calculate \"Ideal\" positions", 0));
+        actionSettings->setText(QApplication::translate("DSMmainwindowClass", "Settings", 0));
         QTableWidgetItem *___qtablewidgetitem = tableWidget->horizontalHeaderItem(0);
         ___qtablewidgetitem->setText(QApplication::translate("DSMmainwindowClass", "Selected Atom", 0));
         QTableWidgetItem *___qtablewidgetitem1 = tableWidget->verticalHeaderItem(0);
@@ -343,6 +357,21 @@ public:
         ___qtablewidgetitem12->setText(QApplication::translate("DSMmainwindowClass", "/", 0));
         tableWidget->setSortingEnabled(__sortingEnabled);
 
+        label->setText(QApplication::translate("DSMmainwindowClass", "Images:", 0));
+        label_2->setText(QApplication::translate("DSMmainwindowClass", "-", 0));
+        label_3->setText(QApplication::translate("DSMmainwindowClass", "+", 0));
+        label_4->setText(QApplication::translate("DSMmainwindowClass", "v1:", 0));
+        label_5->setText(QApplication::translate("DSMmainwindowClass", "v2:", 0));
+        label_6->setText(QApplication::translate("DSMmainwindowClass", "v3:", 0));
+        tabWidget->setTabText(tabWidget->indexOf(tab1), QApplication::translate("DSMmainwindowClass", "Images", 0));
+        checkBox->setText(QApplication::translate("DSMmainwindowClass", "Hide Cells", 0));
+        label_7->setText(QApplication::translate("DSMmainwindowClass", "Atom Scale:", 0));
+        lineEdit->setText(QApplication::translate("DSMmainwindowClass", "/", 0));
+        label_8->setText(QApplication::translate("DSMmainwindowClass", "Cylinder Scale:", 0));
+        label_9->setText(QApplication::translate("DSMmainwindowClass", "Cova Scale:", 0));
+        lineEdit_2->setText(QApplication::translate("DSMmainwindowClass", "/", 0));
+        lineEdit_3->setText(QApplication::translate("DSMmainwindowClass", "/", 0));
+        tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("DSMmainwindowClass", "Options", 0));
         menuOpen_Structure->setTitle(QApplication::translate("DSMmainwindowClass", "File", 0));
         menuTools->setTitle(QApplication::translate("DSMmainwindowClass", "Tools", 0));
     } // retranslateUi

@@ -5,6 +5,13 @@
 #include "renderables/cylinder.h"
 #include "renderables/Cube.h"
 
+namespace global {
+static const char* vertexShaderPath;
+static const char* fragmentShaderPath;
+static const char* cylinderPath;
+static const char* cubePath;
+}
+
 //----------------------BaseSphere-----------------------//
 
 class BaseSphere: private Sphere

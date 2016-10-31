@@ -16,6 +16,9 @@ private:
 	bool m_Created = false;
 	glm::dmat3 m_Cell = glm::dmat3(1.0f);
 	glm::vec3 m_Origin;
+    float m_CovaScale = 1.2f;
+    float m_AtomScale = 0.5f;
+    float m_BondScale = 0.2f;
 
 
 public:
@@ -36,18 +39,19 @@ public:
 	bool edited = false;
 	bool isnew = false;
 	QString file = NULL;
-	QString name;
+    QString name;
 private:
-	void calculateOrigin();
+    void calculateOrigin();
 	void genSurroundings();
 	void regenSurroundings(unsigned int& index);
-	void genSpheres();
-	void genBonds();
-	void genFullCell();
-	void regenBonds(unsigned int& index,glm::dvec3& oldCoords);
+    void genSpheres();
+    void genBonds();
+    void genFullCell();
+    void regenBonds(unsigned int& index,glm::dvec3& oldCoords);
+
 public:
-	Structure();
-	~Structure();
+    Structure();
+    ~Structure();
 	std::vector<Particle>& getAtoms() { return m_Atoms; };
 	glm::dmat3& getCell() { return m_Cell; };
 	std::vector<Bond> &getBonds() { return m_Bonds; };
@@ -56,6 +60,7 @@ public:
 	void populateAtoms(std::vector<Particle> &inAtoms);
 	void setCell(glm::dmat3& cell);
 	void setCellCoords(uint& index, glm::dvec3 coords);
+
 	std::vector<glm::dvec3> getAtomCoords();
 	std::vector<glm::dvec3> getRelativeAtomCoords();
 	std::vector<glm::vec3> getAtomColours();
@@ -63,10 +68,17 @@ public:
 	std::vector<float> getAtomRadii();
 	void updateImageMats();
 	void resetBufs();
-	void updateAtomCoords(uint& index, glm::dvec3& addCoords);
+	void updateAtomCoords(uint& index, glm::dvec3 addCoords);
 	void setAtomCoords(uint& index1,glm::dvec3 coords);
 	void addAtom(Particle atom);
 	void removeAtom(int index);
+
 	void create();
 
+    float getCovaScale() const;
+    void setCovaScale(float CovaScale);
+    float getAtomScale() const;
+    void setAtomScale(float AtomScale);
+    float getBondScale() const;
+    void setBondScale(float BondScale);
 };

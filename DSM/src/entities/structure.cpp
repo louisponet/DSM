@@ -3,9 +3,9 @@
 #include <glm/gtc/matrix_access.hpp>
 #include <glm/gtx/transform.hpp>
 #include "structure.h"
-#include "../utils/timer.h"
 #include "../graphics/generator.h"
 #include "../utils/maths.h"
+
 #ifdef _DEBUG
 #include <iostream>
 #endif
@@ -34,9 +34,6 @@ void Structure::populateAtoms(std::vector<Particle>& inAtoms)
 
 void Structure::updateImageMats()
 {
-
-
-
 	std::vector<glm::mat4> v1TranslMats, v2TranslMats, v3TranslMats;
 	v1TranslMats.reserve(v1PosImCount + v1NegImCount);
 	v2TranslMats.reserve(v2PosImCount + v2NegImCount);
@@ -104,11 +101,24 @@ void Structure::updateImageMats()
 
 }
 
-void Structure::updateAtomCoords(uint& index, glm::dvec3& new_coords)
+void Structure::updateAtomCoords(uint& index, glm::dvec3 new_coords)
 {
+    new_coords = glm::inverse(m_Cell)*new_coords;
 	glm::dvec3 oldCoords = m_Atoms[index].coords;
-	m_Atoms[index].coords = new_coords;
-	spheres[index] = Sphere((glm::vec3) m_Atoms[index].coords, m_Atoms[index].getCova() * 0.5f, m_Atoms[index].getColour(), 0.9f, 10.0f, spheres[index].index);
+    if(new_coords[0]>1.0f)
+        new_coords[0]=1.0f;
+    if(new_coords[1]>1.0f)
+        new_coords[1]=1.0f;
+    if(new_coords[2]>1.0f)
+        new_coords[2]=1.0f;
+    if(new_coords[0]<0.0f)
+        new_coords[0]=0.0f;
+    if(new_coords[1]<0.0f)
+        new_coords[1]=0.0f;
+    if(new_coords[2]<0.0f)
+        new_coords[2]=0.0f;
+    m_Atoms[index].coords = m_Cell*new_coords;
+    spheres[index] = Sphere((glm::vec3) m_Atoms[index].coords, m_Atoms[index].getCova() * m_AtomScale, m_Atoms[index].getColour(), 0.9f, 10.0f, spheres[index].index);
 	regenBonds(index, oldCoords);
 	edited = true;
 	Generator::instance()->updateStructureBufs(this);
@@ -163,19 +173,21 @@ void Structure::genSpheres()
 	unsigned int indexCounter = 0;
 	for (unsigned int i = 0; i < m_Atoms.size(); i++)
 	{
-		spheres.push_back(Sphere((glm::vec3)m_Atoms[i].coords, m_Atoms[i].getCova() * 0.5f, m_Atoms[i].getColour(), 0.9f, 10.0f, indexCounter));
+        spheres.push_back(Sphere((glm::vec3)m_Atoms[i].coords, m_Atoms[i].getCova() * m_AtomScale, m_Atoms[i].getColour(), 0.9f, 32.0f, indexCounter));
 		indexCounter += 1;
 	}
 }
 
+
+
 void Structure::calculateOrigin()
 {
-	float totX=0, totY=0, totZ=0, meanX, meanY, meanZ;
-	for each (Particle at in m_Atoms)
-	{
-		totX += at.coords.x;
-		totY += at.coords.y;
-		totZ += at.coords.z;
+    float totX=0, totY=0, totZ=0, meanX, meanY, meanZ;
+    for (uint i = 0 ; i< m_Atoms.size();i++)
+    {
+        totX += m_Atoms[i].coords.x;
+		totY += m_Atoms[i].coords.y;
+		totZ += m_Atoms[i].coords.z;
 	}
 	meanX = totX / m_Atoms.size();
 	meanY = totY / m_Atoms.size();
@@ -222,89 +234,89 @@ void Structure::genSurroundings()
 {
 	m_SurroundingAtoms.clear();
 	m_SurroundingAtoms.reserve(26 * m_Atoms.size());
-	for each (Particle atom in m_Atoms)
+    for(uint i = 0; i < m_Atoms.size();i++)
 	{
-		m_SurroundingAtoms.push_back(Particle(atom.getElement(), glm::vec3(atom.coords.x + m_Cell[0][0], atom.coords.y + m_Cell[0][1],
-			atom.coords.z + m_Cell[0][2])));
-		m_SurroundingAtoms.push_back(Particle(atom.getElement(), glm::vec3(atom.coords.x + m_Cell[1][0], atom.coords.y + m_Cell[1][1],
-			atom.coords.z + m_Cell[1][2])));
-		m_SurroundingAtoms.push_back(Particle(atom.getElement(), glm::vec3(atom.coords.x + m_Cell[2][0], atom.coords.y + m_Cell[2][1],
-			atom.coords.z + m_Cell[2][2])));
-		m_SurroundingAtoms.push_back(Particle(atom.getElement(), glm::vec3(atom.coords.x - m_Cell[0][0], atom.coords.y - m_Cell[0][1],
-			atom.coords.z - m_Cell[0][2])));
-		m_SurroundingAtoms.push_back(Particle(atom.getElement(), glm::vec3(atom.coords.x - m_Cell[1][0], atom.coords.y - m_Cell[1][1],
-			atom.coords.z - m_Cell[1][2])));
-		m_SurroundingAtoms.push_back(Particle(atom.getElement(), glm::vec3(atom.coords.x - m_Cell[2][0], atom.coords.y - m_Cell[2][1],
-			atom.coords.z - m_Cell[2][2])));
-		m_SurroundingAtoms.push_back(Particle(atom.getElement(), glm::vec3(atom.coords.x + m_Cell[0][0] + m_Cell[1][0],
-			atom.coords.y + m_Cell[0][1] + m_Cell[1][1],
-			atom.coords.z + m_Cell[0][2] + m_Cell[1][2])));
-		m_SurroundingAtoms.push_back(Particle(atom.getElement(), glm::vec3(atom.coords.x + m_Cell[0][0] - m_Cell[1][0],
-			atom.coords.y + m_Cell[0][1] - m_Cell[1][1],
-			atom.coords.z + m_Cell[0][2] - m_Cell[1][2])));
-		m_SurroundingAtoms.push_back(Particle(atom.getElement(), glm::vec3(atom.coords.x - m_Cell[0][0] + m_Cell[1][0],
-			atom.coords.y - m_Cell[0][1] + m_Cell[1][1],
-			atom.coords.z - m_Cell[0][2] + m_Cell[1][2])));
-		m_SurroundingAtoms.push_back(Particle(atom.getElement(), glm::vec3(atom.coords.x - m_Cell[0][0] - m_Cell[1][0],
-			atom.coords.y - m_Cell[0][1] - m_Cell[1][1],
-			atom.coords.z - m_Cell[0][2] - m_Cell[1][2])));
-		m_SurroundingAtoms.push_back(Particle(atom.getElement(), glm::vec3(atom.coords.x + m_Cell[0][0] + m_Cell[2][0],
-			atom.coords.y + m_Cell[0][1] + m_Cell[2][1],
-			atom.coords.z + m_Cell[0][2] + m_Cell[2][2])));
-		m_SurroundingAtoms.push_back(Particle(atom.getElement(), glm::vec3(atom.coords.x + m_Cell[0][0] - m_Cell[2][0],
-			atom.coords.y + m_Cell[0][1] - m_Cell[2][1],
-			atom.coords.z + m_Cell[0][2] - m_Cell[2][2])));
-		m_SurroundingAtoms.push_back(Particle(atom.getElement(), glm::vec3(atom.coords.x - m_Cell[0][0] + m_Cell[2][0],
-			atom.coords.y - m_Cell[0][1] + m_Cell[2][1],
-			atom.coords.z - m_Cell[0][2] + m_Cell[2][2])));
-		m_SurroundingAtoms.push_back(Particle(atom.getElement(), glm::vec3(atom.coords.x - m_Cell[0][0] - m_Cell[2][0],
-			atom.coords.y - m_Cell[0][1] - m_Cell[2][1],
-			atom.coords.z - m_Cell[0][2] - m_Cell[2][2])));
-		m_SurroundingAtoms.push_back(Particle(atom.getElement(), glm::vec3(atom.coords.x + m_Cell[1][0] + m_Cell[2][0],
-			atom.coords.y + m_Cell[1][1] + m_Cell[2][1],
-			atom.coords.z + m_Cell[1][2] + m_Cell[2][2])));
-		m_SurroundingAtoms.push_back(Particle(atom.getElement(), glm::vec3(atom.coords.x + m_Cell[1][0] - m_Cell[2][0],
-			atom.coords.y + m_Cell[1][1] - m_Cell[2][1],
-			atom.coords.z + m_Cell[1][2] - m_Cell[2][2])));
-		m_SurroundingAtoms.push_back(Particle(atom.getElement(), glm::vec3(atom.coords.x - m_Cell[1][0] + m_Cell[2][0],
-			atom.coords.y - m_Cell[1][1] + m_Cell[2][1],
-			atom.coords.z - m_Cell[1][2] + m_Cell[2][2])));
-		m_SurroundingAtoms.push_back(Particle(atom.getElement(), glm::vec3(atom.coords.x - m_Cell[1][0] - m_Cell[2][0],
-			atom.coords.y - m_Cell[1][1] - m_Cell[2][1],
-			atom.coords.z - m_Cell[1][2] - m_Cell[2][2])));
+		m_SurroundingAtoms.push_back(Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x + m_Cell[0][0], m_Atoms[i].coords.y + m_Cell[0][1],
+			m_Atoms[i].coords.z + m_Cell[0][2])));
+		m_SurroundingAtoms.push_back(Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x + m_Cell[1][0], m_Atoms[i].coords.y + m_Cell[1][1],
+			m_Atoms[i].coords.z + m_Cell[1][2])));
+		m_SurroundingAtoms.push_back(Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x + m_Cell[2][0], m_Atoms[i].coords.y + m_Cell[2][1],
+			m_Atoms[i].coords.z + m_Cell[2][2])));
+		m_SurroundingAtoms.push_back(Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x - m_Cell[0][0], m_Atoms[i].coords.y - m_Cell[0][1],
+			m_Atoms[i].coords.z - m_Cell[0][2])));
+		m_SurroundingAtoms.push_back(Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x - m_Cell[1][0], m_Atoms[i].coords.y - m_Cell[1][1],
+			m_Atoms[i].coords.z - m_Cell[1][2])));
+		m_SurroundingAtoms.push_back(Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x - m_Cell[2][0], m_Atoms[i].coords.y - m_Cell[2][1],
+			m_Atoms[i].coords.z - m_Cell[2][2])));
+		m_SurroundingAtoms.push_back(Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x + m_Cell[0][0] + m_Cell[1][0],
+			m_Atoms[i].coords.y + m_Cell[0][1] + m_Cell[1][1],
+			m_Atoms[i].coords.z + m_Cell[0][2] + m_Cell[1][2])));
+		m_SurroundingAtoms.push_back(Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x + m_Cell[0][0] - m_Cell[1][0],
+			m_Atoms[i].coords.y + m_Cell[0][1] - m_Cell[1][1],
+			m_Atoms[i].coords.z + m_Cell[0][2] - m_Cell[1][2])));
+		m_SurroundingAtoms.push_back(Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x - m_Cell[0][0] + m_Cell[1][0],
+			m_Atoms[i].coords.y - m_Cell[0][1] + m_Cell[1][1],
+			m_Atoms[i].coords.z - m_Cell[0][2] + m_Cell[1][2])));
+		m_SurroundingAtoms.push_back(Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x - m_Cell[0][0] - m_Cell[1][0],
+			m_Atoms[i].coords.y - m_Cell[0][1] - m_Cell[1][1],
+			m_Atoms[i].coords.z - m_Cell[0][2] - m_Cell[1][2])));
+		m_SurroundingAtoms.push_back(Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x + m_Cell[0][0] + m_Cell[2][0],
+			m_Atoms[i].coords.y + m_Cell[0][1] + m_Cell[2][1],
+			m_Atoms[i].coords.z + m_Cell[0][2] + m_Cell[2][2])));
+		m_SurroundingAtoms.push_back(Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x + m_Cell[0][0] - m_Cell[2][0],
+			m_Atoms[i].coords.y + m_Cell[0][1] - m_Cell[2][1],
+			m_Atoms[i].coords.z + m_Cell[0][2] - m_Cell[2][2])));
+		m_SurroundingAtoms.push_back(Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x - m_Cell[0][0] + m_Cell[2][0],
+			m_Atoms[i].coords.y - m_Cell[0][1] + m_Cell[2][1],
+			m_Atoms[i].coords.z - m_Cell[0][2] + m_Cell[2][2])));
+		m_SurroundingAtoms.push_back(Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x - m_Cell[0][0] - m_Cell[2][0],
+			m_Atoms[i].coords.y - m_Cell[0][1] - m_Cell[2][1],
+			m_Atoms[i].coords.z - m_Cell[0][2] - m_Cell[2][2])));
+		m_SurroundingAtoms.push_back(Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x + m_Cell[1][0] + m_Cell[2][0],
+			m_Atoms[i].coords.y + m_Cell[1][1] + m_Cell[2][1],
+			m_Atoms[i].coords.z + m_Cell[1][2] + m_Cell[2][2])));
+		m_SurroundingAtoms.push_back(Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x + m_Cell[1][0] - m_Cell[2][0],
+			m_Atoms[i].coords.y + m_Cell[1][1] - m_Cell[2][1],
+			m_Atoms[i].coords.z + m_Cell[1][2] - m_Cell[2][2])));
+		m_SurroundingAtoms.push_back(Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x - m_Cell[1][0] + m_Cell[2][0],
+			m_Atoms[i].coords.y - m_Cell[1][1] + m_Cell[2][1],
+			m_Atoms[i].coords.z - m_Cell[1][2] + m_Cell[2][2])));
+		m_SurroundingAtoms.push_back(Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x - m_Cell[1][0] - m_Cell[2][0],
+			m_Atoms[i].coords.y - m_Cell[1][1] - m_Cell[2][1],
+			m_Atoms[i].coords.z - m_Cell[1][2] - m_Cell[2][2])));
 
 
-		m_SurroundingAtoms.push_back(Particle(atom.getElement(), glm::vec3(atom.coords.x + m_Cell[0][0] + m_Cell[1][0] + m_Cell[2][0],
-			atom.coords.y + m_Cell[0][1] + m_Cell[1][1] + m_Cell[2][1],
-			atom.coords.z + m_Cell[0][2] + m_Cell[1][2] + m_Cell[2][2])));
+		m_SurroundingAtoms.push_back(Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x + m_Cell[0][0] + m_Cell[1][0] + m_Cell[2][0],
+			m_Atoms[i].coords.y + m_Cell[0][1] + m_Cell[1][1] + m_Cell[2][1],
+			m_Atoms[i].coords.z + m_Cell[0][2] + m_Cell[1][2] + m_Cell[2][2])));
 		m_SurroundingAtoms.push_back(
-			Particle(atom.getElement(), glm::vec3(atom.coords.x + m_Cell[0][0] - m_Cell[1][0] + m_Cell[2][0],
-				atom.coords.y + m_Cell[0][1] - m_Cell[1][1] + m_Cell[2][1],
-				atom.coords.z + m_Cell[0][2] - m_Cell[1][2] + m_Cell[2][2])));
+			Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x + m_Cell[0][0] - m_Cell[1][0] + m_Cell[2][0],
+				m_Atoms[i].coords.y + m_Cell[0][1] - m_Cell[1][1] + m_Cell[2][1],
+				m_Atoms[i].coords.z + m_Cell[0][2] - m_Cell[1][2] + m_Cell[2][2])));
 		m_SurroundingAtoms.push_back(
-			Particle(atom.getElement(), glm::vec3(atom.coords.x + m_Cell[0][0] + m_Cell[1][0] - m_Cell[2][0],
-				atom.coords.y + m_Cell[0][1] + m_Cell[1][1] - m_Cell[2][1],
-				atom.coords.z + m_Cell[0][2] + m_Cell[1][2] - m_Cell[2][2])));
+			Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x + m_Cell[0][0] + m_Cell[1][0] - m_Cell[2][0],
+				m_Atoms[i].coords.y + m_Cell[0][1] + m_Cell[1][1] - m_Cell[2][1],
+				m_Atoms[i].coords.z + m_Cell[0][2] + m_Cell[1][2] - m_Cell[2][2])));
 		m_SurroundingAtoms.push_back(
-			Particle(atom.getElement(), glm::vec3(atom.coords.x - m_Cell[0][0] + m_Cell[1][0] + m_Cell[2][0],
-				atom.coords.y - m_Cell[0][1] + m_Cell[1][1] + m_Cell[2][1],
-				atom.coords.z - m_Cell[0][2] + m_Cell[1][2] + m_Cell[2][2])));
+			Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x - m_Cell[0][0] + m_Cell[1][0] + m_Cell[2][0],
+				m_Atoms[i].coords.y - m_Cell[0][1] + m_Cell[1][1] + m_Cell[2][1],
+				m_Atoms[i].coords.z - m_Cell[0][2] + m_Cell[1][2] + m_Cell[2][2])));
 		m_SurroundingAtoms.push_back(
-			Particle(atom.getElement(), glm::vec3(atom.coords.x + m_Cell[0][0] - m_Cell[1][0] - m_Cell[2][0],
-				atom.coords.y + m_Cell[0][1] - m_Cell[1][1] - m_Cell[2][1],
-				atom.coords.z + m_Cell[0][2] - m_Cell[1][2] - m_Cell[2][2])));
+			Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x + m_Cell[0][0] - m_Cell[1][0] - m_Cell[2][0],
+				m_Atoms[i].coords.y + m_Cell[0][1] - m_Cell[1][1] - m_Cell[2][1],
+				m_Atoms[i].coords.z + m_Cell[0][2] - m_Cell[1][2] - m_Cell[2][2])));
 		m_SurroundingAtoms.push_back(
-			Particle(atom.getElement(), glm::vec3(atom.coords.x - m_Cell[0][0] + m_Cell[1][0] - m_Cell[2][0],
-				atom.coords.y - m_Cell[0][1] + m_Cell[1][1] - m_Cell[2][1],
-				atom.coords.z - m_Cell[0][2] + m_Cell[1][2] - m_Cell[2][2])));
+			Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x - m_Cell[0][0] + m_Cell[1][0] - m_Cell[2][0],
+				m_Atoms[i].coords.y - m_Cell[0][1] + m_Cell[1][1] - m_Cell[2][1],
+				m_Atoms[i].coords.z - m_Cell[0][2] + m_Cell[1][2] - m_Cell[2][2])));
 		m_SurroundingAtoms.push_back(
-			Particle(atom.getElement(), glm::vec3(atom.coords.x - m_Cell[0][0] - m_Cell[1][0] + m_Cell[2][0],
-				atom.coords.y - m_Cell[0][1] - m_Cell[1][1] + m_Cell[2][1],
-				atom.coords.z - m_Cell[0][2] - m_Cell[1][2] + m_Cell[2][2])));
+			Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x - m_Cell[0][0] - m_Cell[1][0] + m_Cell[2][0],
+				m_Atoms[i].coords.y - m_Cell[0][1] - m_Cell[1][1] + m_Cell[2][1],
+				m_Atoms[i].coords.z - m_Cell[0][2] - m_Cell[1][2] + m_Cell[2][2])));
 		m_SurroundingAtoms.push_back(
-			Particle(atom.getElement(), glm::vec3(atom.coords.x - m_Cell[0][0] - m_Cell[1][0] - m_Cell[2][0],
-				atom.coords.y - m_Cell[0][1] - m_Cell[1][1] - m_Cell[2][1],
-				atom.coords.z - m_Cell[0][2] - m_Cell[1][2] - m_Cell[2][2])));
+			Particle(m_Atoms[i].getElement(), glm::vec3(m_Atoms[i].coords.x - m_Cell[0][0] - m_Cell[1][0] - m_Cell[2][0],
+				m_Atoms[i].coords.y - m_Cell[0][1] - m_Cell[1][1] - m_Cell[2][1],
+				m_Atoms[i].coords.z - m_Cell[0][2] - m_Cell[1][2] - m_Cell[2][2])));
 	}
 #ifdef _DEBUG
 		std::cout << "Done populating surrounding atoms.\n Size is:" << m_SurroundingAtoms.size() << std::endl;
@@ -410,7 +422,7 @@ void Structure::genBonds()
 			dvec3& pos2 = atom2.coords;
 			float cov2 = atom2.getCova();
 			float dist = glm::distance(pos1, pos2);
-			if (cov1 + cov2 + 0.6> dist )
+            if (cov1*m_CovaScale + cov2*m_CovaScale> dist )
 			{
 				m_Bonds.push_back(Bond(atom1, atom2, atom1.getColour()));
 				m_Bonds.push_back(Bond(atom2, atom1, atom2.getColour()));
@@ -423,7 +435,7 @@ void Structure::genBonds()
 			dvec3& pos2 = atom2.coords;
 			float cov2 = atom2.getCova();
 			float dist = glm::distance(pos1, pos2);
-			if (cov1 + cov2 +0.6> dist)
+            if (cov1*m_CovaScale + cov2*m_CovaScale> dist )
 			{
 				m_Bonds.push_back(Bond(atom1, atom2, atom1.getColour()));
 			}
@@ -433,12 +445,10 @@ void Structure::genBonds()
 	for (unsigned int i = 0; i < m_Bonds.size(); i++)
 	{
 		Particle& atom1=m_Bonds[i].atom1, &atom2=m_Bonds[i].atom2;
-		cylinders.push_back(Cylinder((glm::vec3)atom1.coords, (glm::vec3) atom2.coords, 0.2f, atom1.getColour(), 0.0f, 1.0f));
+        cylinders.push_back(Cylinder((glm::vec3)atom1.coords, (glm::vec3) atom2.coords, m_BondScale, atom1.getColour(), 0.0f, 1.0f));
 	}
 
-#if DEBUG
-	std::cout << "Done generating bonds.\n Size is:" << m_Bonds.size() << std::endl;
-#endif
+
 }
 
 void Structure::regenBonds(unsigned int& index, glm::dvec3& oldCoords)
@@ -477,13 +487,13 @@ void Structure::regenBonds(unsigned int& index, glm::dvec3& oldCoords)
 		glm::dvec3& pos2 = atom2.coords;
 		float cov2 = atom2.getCova();
 		float dist = glm::distance(pos1, pos2);
-		if (cov1 + cov2 + 0.6 > dist)
+        if (cov1*m_CovaScale + cov2*m_CovaScale> dist )
 		{
 			m_Bonds.push_back(Bond(atom1, atom2, atom1.getColour()));
 			m_Bonds.push_back(Bond(atom2, atom1, atom2.getColour()));
 
-			cylinders.push_back(Cylinder((glm::vec3) atom1.coords,(glm::vec3) atom2.coords, 0.2f, atom1.getColour(), 0.0f, 1.0f));
-			cylinders.push_back(Cylinder((glm::vec3) atom2.coords,(glm::vec3) atom1.coords, 0.2f, atom2.getColour(), 0.0f, 1.0f));
+            cylinders.push_back(Cylinder((glm::vec3) atom1.coords,(glm::vec3) atom2.coords, m_BondScale, atom1.getColour(), 0.0f, 1.0f));
+            cylinders.push_back(Cylinder((glm::vec3) atom2.coords,(glm::vec3) atom1.coords, m_BondScale, atom2.getColour(), 0.0f, 1.0f));
 
 		}
 	}
@@ -493,10 +503,10 @@ void Structure::regenBonds(unsigned int& index, glm::dvec3& oldCoords)
 		glm::dvec3& pos2 = atom2.coords;
 		float cov2 = atom2.getCova();
 		float dist = glm::distance(pos1, pos2);
-		if (cov1 + cov2 + 0.6 > dist)
-		{
+        if (cov1*m_CovaScale + cov2*m_CovaScale> dist )
+        {
 			m_Bonds.push_back(Bond(atom1, atom2, atom1.getColour()));
-			cylinders.push_back(Cylinder((glm::vec3) atom1.coords, (glm::vec3) atom2.coords, 0.2f, atom1.getColour(), 0.0f, 1.0f));
+            cylinders.push_back(Cylinder((glm::vec3) atom1.coords, (glm::vec3) atom2.coords, m_BondScale, atom1.getColour(), 0.0f, 1.0f));
 		}
 	}
 	for (unsigned int i = start; i< start+stride; i++)
@@ -510,10 +520,10 @@ void Structure::regenBonds(unsigned int& index, glm::dvec3& oldCoords)
 			glm::dvec3& pos1 = atom1.coords;
 			float cov1 = atom1.getCova();
 			float dist = glm::distance(pos1, pos2);
-			if (cov1 + cov2 + 0.6 > dist)
+            if (cov1*m_CovaScale + cov2*m_CovaScale> dist )
 			{
 				m_Bonds.push_back(Bond(atom1, atom2, atom1.getColour()));
-				cylinders.push_back(Cylinder((glm::vec3) atom1.coords, (glm::vec3) atom2.coords, 0.2f, atom1.getColour(), 0.0f, 1.0f));
+                cylinders.push_back(Cylinder((glm::vec3) atom1.coords, (glm::vec3) atom2.coords, m_BondScale, atom1.getColour(), 0.0f, 1.0f));
 			}
 		}
 	}
@@ -524,9 +534,9 @@ void Structure::regenBonds(unsigned int& index, glm::dvec3& oldCoords)
 std::vector<glm::dvec3> Structure::getAtomCoords()
 {
 	std::vector<glm::dvec3> atomCoords;
-	for each (Particle atom in m_Atoms)
+    for (uint i = 0 ; i<m_Atoms.size();i++)
 	{
-		atomCoords.push_back(atom.coords);
+		atomCoords.push_back(m_Atoms[i].coords);
 	}
 	return atomCoords;
 }
@@ -544,9 +554,9 @@ std::vector < glm::dvec3> Structure::getRelativeAtomCoords()
 std::vector<glm::vec3> Structure::getAtomColours()
 {
 	std::vector<glm::vec3> atomColors;
-	for each (Particle atom in m_Atoms)
+    for (uint i = 0 ; i<m_Atoms.size();i++)
 	{
-		atomColors.push_back(atom.getColour());
+		atomColors.push_back(m_Atoms[i].getColour());
 	}
 	return atomColors;
 }
@@ -554,9 +564,9 @@ std::vector<glm::vec3> Structure::getAtomColours()
 std::vector<std::string> Structure::getAtomSymbols()
 {
 	std::vector<std::string> atomSymbols;
-	for each (Particle atom in m_Atoms)
+    for(uint i = 0; i<m_Atoms.size();i++)
 	{
-		atomSymbols.push_back(atom.getSymbol());
+		atomSymbols.push_back(m_Atoms[i].getSymbol());
 	}
 	return atomSymbols;
 }
@@ -564,11 +574,49 @@ std::vector<std::string> Structure::getAtomSymbols()
 std::vector<float> Structure::getAtomRadii()
 {
 	std::vector<float> atomRadii;
-	for each (Particle atom in m_Atoms)
+    for (uint i = 0 ; i < m_Atoms.size();i++)
 	{
-		atomRadii.push_back(atom.getCova());
+		atomRadii.push_back(m_Atoms[i].getCova());
 	}
 	return atomRadii;
+}
+
+float Structure::getCovaScale() const
+{
+    return m_CovaScale;
+}
+
+void Structure::setCovaScale(float CovaScale)
+{
+    m_CovaScale = CovaScale;
+    genBonds();
+
+    Generator::instance()->deleteCylinderBufs(this);
+    Generator::instance()->setupCylinderBufs(this);
+}
+
+float Structure::getAtomScale() const
+{
+    return m_AtomScale;
+}
+
+void Structure::setAtomScale(float AtomScale)
+{
+    m_AtomScale = AtomScale;
+    genSpheres();
+    Generator::instance()->updateStructureBufs(this);
+}
+
+float Structure::getBondScale() const
+{
+    return m_BondScale;
+}
+
+void Structure::setBondScale(float BondScale)
+{
+    m_BondScale = BondScale;
+    genBonds();
+    Generator::instance()->updateStructureBufs(this);
 }
 
 //-----------------Reset commands---------------------------------//

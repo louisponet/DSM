@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <QtCore/Qt>
 #include <glm/gtx/transform.hpp>
@@ -5,14 +6,19 @@
 #include "generator.h"
 #include "glwidget.h"
 
-GLWidget::GLWidget(QWidget *parent) :QOpenGLWidget(parent), m_Shader("src/graphics/shaders/main.vert", "src/graphics/shaders/main.frag")
+
+GLWidget::GLWidget(QWidget *parent) :QOpenGLWidget(parent),m_Shader("src/graphics/shaders/main.vert","src/graphics/shaders/main.frag")
 {
-	QSurfaceFormat format;
+
+    QSurfaceFormat format;
 	format.setDepthBufferSize(16);
 	format.setVersion(4, 1);
+
 	format.setRenderableType(QSurfaceFormat::OpenGL);
+    format.setProfile(QSurfaceFormat::CoreProfile);
 	setFormat(format);
 	setFocusPolicy(Qt::StrongFocus);
+
 // 	setMouseTracking(true);
 }
 
@@ -23,9 +29,10 @@ GLWidget::~GLWidget()
 
 void GLWidget::initializeGL()
 {
-
+    makeCurrent();
 	initializeOpenGLFunctions();
 	Generator::instance()->init(this);
+
 	const unsigned char* version = glGetString(GL_VERSION);
 	std::cout << version << std::endl;
 	m_Shader.load(this);
@@ -61,7 +68,7 @@ void GLWidget::paintGL()
 	if (m_Camera!=NULL)
 	{
 		m_Shader.enable();
-		glm::mat4& wtvMat = m_Camera->getWTVMat();
+		glm::mat4 wtvMat = m_Camera->getWTVMat();
 		m_Shader.setUniform3vec("eye_world_pos0", glm::vec3(glm::inverse(m_Camera->globalTransMat)*glm::vec4(m_Camera->position, 1.0f)));
 		m_Shader.setUniform4mat("transformMatrix", m_ProjectionMatrix*wtvMat);
 		if (!m_Testing)
@@ -94,7 +101,7 @@ void GLWidget::paintGL()
 					GLenum error = glGetError();
 					if (error != GL_NO_ERROR)
 					{
-						std::cout << "OpenGL Error: " << error << std::endl;
+                        std::cout << "OpenGL Error trying to bind vertexarray: " << error << std::endl;
 					}
 					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*m_IndBufs)[i]);
 					glDrawElementsInstanced(GL_TRIANGLES, (*m_NumVerticesList)[i], GL_UNSIGNED_INT, 0, (*m_NumObjectsList)[i]);

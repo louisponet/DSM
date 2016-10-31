@@ -1,45 +1,5 @@
-﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(392,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (gdisTest3.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  Moc'ing DSMmainwindow.h...
-  Uic'ing DSMmainwindow.ui...
-  Moc'ing atomwindow.h...
-  Moc'ing createstructurewindow.h...
-  Moc'ing tablewidget.h...
-  Moc'ing treewidget.h...
-  Moc'ing glwidget.h...
-  Rcc'ing DSMmainwindow.qrc...
-RCC : warning : No resources in 'C:\Users\ponet\Source\Repos\DSM\DSM\DSMmainwindow.qrc'.
-  
-  Uic'ing src\windows\createstructurewindow.ui...
-  Uic'ing src\windows\atomwindow.ui...
-  DSMmainwindow.cpp
-  moc_atomwindow.cpp
-  moc_DSMmainwindow.cpp
-  moc_glwidget.cpp
-  moc_tablewidget.cpp
-  moc_treewidget.cpp
-  moc_createstructurewindow.cpp
-  main.cpp
-  bond.cpp
-  particle.cpp
-  structure.cpp
-  objreader.cpp
-  qeIO.cpp
-  global.cpp
-  camera.cpp
-  generator.cpp
-  glwidget.cpp
-  shader.cpp
-  Cube.cpp
+﻿  Cube.cpp
   cylinder.cpp
   Generating Code...
-  Compiling...
-  renderable3D.cpp
-  sphere.cpp
-  tablewidget.cpp
-  treewidget.cpp
-  atomwindow.cpp
-  createstructurewindow.cpp
-  Generating Code...
-  qrc_DSMmainwindow.cpp
   DSM.vcxproj -> C:\Users\ponet\Source\Repos\DSM\DSM\x64\Debug\DSM.exe
   DSM.vcxproj -> C:\Users\ponet\Source\Repos\DSM\DSM\x64\Debug\DSM.pdb (Full PDB)

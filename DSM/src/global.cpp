@@ -1,5 +1,4 @@
 #include "global.h"
-
 BaseSphere::BaseSphere():Sphere()
 {
 

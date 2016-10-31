@@ -5,7 +5,7 @@
 class Cube:public Renderable3D
 {
 public:
-	Cube(glm::vec3&  vector1, glm::vec3&  vector2, float width, glm::vec3& colour);
+	Cube(glm::vec3  vector1, glm::vec3  vector2, float width, glm::vec3 colour);
 
 	Cube();
 	~Cube();

@@ -6,7 +6,7 @@ class Sphere : public Renderable3D
 {
 public:
 	Sphere();
-	Sphere(glm::vec3 &center, float radius, glm::vec3 colour, float specIntensity, float specPower, unsigned int index);
+	Sphere(glm::vec3 center, float radius, glm::vec3 colour, float specIntensity, float specPower, unsigned int index);
 
 	~Sphere();
 	void genMat();

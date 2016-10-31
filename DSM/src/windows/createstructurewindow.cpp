@@ -172,9 +172,18 @@ void CreateStructureWindow::editName(QString name)
 
 void CreateStructureWindow::editCoord(QTableWidgetItem* item)
 {
-	uint index1 = item->row() ;
-	glm::dvec3 coords = (tmp_Structure->getCell())*glm::dvec3(ui.tableWidget->item(item->row(), 1)->text().toDouble(), ui.tableWidget->item(item->row(), 2)->text().toDouble(), ui.tableWidget->item(item->row(), 3)->text().toDouble());
-	tmp_Structure->setAtomCoords(index1, coords);
+    if (item->text().toDouble()<1.0f)
+    {
+        uint index1 = item->row() ;
+        glm::dvec3 coords = (tmp_Structure->getCell())*glm::dvec3(ui.tableWidget->item(item->row(), 1)->text().toDouble(), ui.tableWidget->item(item->row(), 2)->text().toDouble(), ui.tableWidget->item(item->row(), 3)->text().toDouble());
+        tmp_Structure->setAtomCoords(index1, coords);
+    }
+    else
+    {
+       ui.tableWidget->blockSignals(true);
+       item->setText( QString::number((glm::inverse(tmp_Structure->getCell())*(tmp_Structure->getAtomCoords())[item->row()])[item->column()-1]));
+       ui.tableWidget->blockSignals(false);
+    }
 
 }
 

@@ -1,0 +1,20 @@
+#ifdef __APPLE__
+#include <CoreFoundation/CoreFoundation.h>
+#endif
+
+
+
+
+#ifdef __APPLE__
+        CFURLRef appUrlRef;
+        appUrlRef = CFBundleCopyResourceURL(CFBundleGetMainBundle(),CFSTR("/src/icons"),NULL,NULL);
+        CFStringRef filePathRef = CFURLCopyPath(appUrlRef);
+        const char* pathString = CFStringGetCStringPtr(filePathRef,kCFStringEncodingUTF8);
+#else
+        const char* pathString = "/src/icons";
+#endif
+        icon.addFile(QString(pathString)+QString("/folder.xpm"), QSize(), QIcon::Normal, QIcon::Off);
+#ifdef __APPLE__
+        CFRelease(appUrlRef);
+        CFRelease(filePathRef);
+#endif

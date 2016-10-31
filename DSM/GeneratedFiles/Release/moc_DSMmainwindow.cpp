@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[34];
-    char stringdata0[459];
+    QByteArrayData data[38];
+    char stringdata0[515];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -62,7 +62,11 @@ QT_MOC_LITERAL(29, 394, 8), // "QAction*"
 QT_MOC_LITERAL(30, 403, 15), // "acceptStructure"
 QT_MOC_LITERAL(31, 419, 10), // "Structure*"
 QT_MOC_LITERAL(32, 430, 9), // "structure"
-QT_MOC_LITERAL(33, 440, 18) // "deleteNewStructure"
+QT_MOC_LITERAL(33, 440, 18), // "deleteNewStructure"
+QT_MOC_LITERAL(34, 459, 16), // "atomScaleChanged"
+QT_MOC_LITERAL(35, 476, 4), // "text"
+QT_MOC_LITERAL(36, 481, 16), // "bondScaleChanged"
+QT_MOC_LITERAL(37, 498, 16) // "covaScaleChanged"
 
     },
     "MainWindow\0atomSelected\0\0Particle\0"
@@ -77,7 +81,8 @@ QT_MOC_LITERAL(33, 440, 18) // "deleteNewStructure"
     "item\0treewidgetSelection\0QTreeWidgetItem*\0"
     "menuActionTriggered\0QAction*\0"
     "acceptStructure\0Structure*\0structure\0"
-    "deleteNewStructure"
+    "deleteNewStructure\0atomScaleChanged\0"
+    "text\0bondScaleChanged\0covaScaleChanged"
 };
 #undef QT_MOC_LITERAL
 
@@ -87,7 +92,7 @@ static const uint qt_meta_data_MainWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      16,   14, // methods
+      19,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -95,24 +100,27 @@ static const uint qt_meta_data_MainWindow[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,   94,    2, 0x06 /* Public */,
+       1,    1,  109,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       5,    0,   97,    2, 0x0a /* Public */,
-       6,    0,   98,    2, 0x0a /* Public */,
-       7,    1,   99,    2, 0x0a /* Public */,
-       9,    1,  102,    2, 0x0a /* Public */,
-      10,    1,  105,    2, 0x0a /* Public */,
-      11,    1,  108,    2, 0x0a /* Public */,
-      12,    1,  111,    2, 0x0a /* Public */,
-      13,    1,  114,    2, 0x0a /* Public */,
-      14,    3,  117,    2, 0x0a /* Public */,
-      21,    1,  124,    2, 0x0a /* Public */,
-      23,    1,  127,    2, 0x0a /* Public */,
-      26,    1,  130,    2, 0x0a /* Public */,
-      28,    1,  133,    2, 0x0a /* Public */,
-      30,    1,  136,    2, 0x0a /* Public */,
-      33,    0,  139,    2, 0x0a /* Public */,
+       5,    0,  112,    2, 0x0a /* Public */,
+       6,    0,  113,    2, 0x0a /* Public */,
+       7,    1,  114,    2, 0x0a /* Public */,
+       9,    1,  117,    2, 0x0a /* Public */,
+      10,    1,  120,    2, 0x0a /* Public */,
+      11,    1,  123,    2, 0x0a /* Public */,
+      12,    1,  126,    2, 0x0a /* Public */,
+      13,    1,  129,    2, 0x0a /* Public */,
+      14,    3,  132,    2, 0x0a /* Public */,
+      21,    1,  139,    2, 0x0a /* Public */,
+      23,    1,  142,    2, 0x0a /* Public */,
+      26,    1,  145,    2, 0x0a /* Public */,
+      28,    1,  148,    2, 0x0a /* Public */,
+      30,    1,  151,    2, 0x0a /* Public */,
+      33,    0,  154,    2, 0x0a /* Public */,
+      34,    1,  155,    2, 0x0a /* Public */,
+      36,    1,  158,    2, 0x0a /* Public */,
+      37,    1,  161,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
@@ -133,6 +141,9 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Void, 0x80000000 | 29,    2,
     QMetaType::Void, 0x80000000 | 31,   32,
     QMetaType::Void,
+    QMetaType::Void, QMetaType::QString,   35,
+    QMetaType::Void, QMetaType::QString,   35,
+    QMetaType::Void, QMetaType::QString,   35,
 
        0        // eod
 };
@@ -159,18 +170,10 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 13: _t->menuActionTriggered((*reinterpret_cast< QAction*(*)>(_a[1]))); break;
         case 14: _t->acceptStructure((*reinterpret_cast< Structure*(*)>(_a[1]))); break;
         case 15: _t->deleteNewStructure(); break;
+        case 16: _t->atomScaleChanged((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 17: _t->bondScaleChanged((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 18: _t->covaScaleChanged((*reinterpret_cast< QString(*)>(_a[1]))); break;
         default: ;
-        }
-    } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        switch (_id) {
-        default: *reinterpret_cast<int*>(_a[0]) = -1; break;
-        case 13:
-            switch (*reinterpret_cast<int*>(_a[1])) {
-            default: *reinterpret_cast<int*>(_a[0]) = -1; break;
-            case 0:
-                *reinterpret_cast<int*>(_a[0]) = qRegisterMetaType< QAction* >(); break;
-            }
-            break;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
         int *result = reinterpret_cast<int *>(_a[0]);
@@ -210,13 +213,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 16)
+        if (_id < 19)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 16;
+        _id -= 19;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 16)
-            qt_static_metacall(this, _c, _id, _a);
-        _id -= 16;
+        if (_id < 19)
+            *reinterpret_cast<int*>(_a[0]) = -1;
+        _id -= 19;
     }
     return _id;
 }

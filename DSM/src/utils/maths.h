@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 struct maths {
 
-	static glm::mat4 scaleCM( glm::vec3& v)
+	static glm::mat4 scaleCM( glm::vec3 v)
 	{
 		glm::mat4 scaleMat(1.0f);
 		scaleMat[0][0] = 1.0f*v[0];
@@ -12,7 +12,7 @@ struct maths {
 		scaleMat[2][2] = 1.0f*v[2];
 		return scaleMat;
 	}
-	static glm::mat4 rotateCM(glm::mat4& baseMat, float a,glm::vec3& rotAx)
+	static glm::mat4 rotateCM(glm::mat4 baseMat, float a,glm::vec3 rotAx)
 	{
 		glm::mat4 rotMat;
 		float u = rotAx[0];
@@ -38,7 +38,7 @@ struct maths {
 		return rotMat*baseMat;
 	}
 
-	static glm::mat4 translateCM(glm::mat4& baseMat,  glm::vec3& transVec)
+	static glm::mat4 translateCM(glm::mat4 baseMat,  glm::vec3 transVec)
 	{
 		glm::mat4 transMat;
 		transMat[0][0] = 1.0f;
@@ -60,7 +60,7 @@ struct maths {
 		return transMat*baseMat;
 	}
 
-	static glm::mat4 translateCM(  glm::vec3& transVec)
+	static glm::mat4 translateCM(  glm::vec3 transVec)
 	{
 		glm::mat4 transMat;
 		transMat[0][0] = 1.0f;
@@ -82,7 +82,7 @@ struct maths {
 		return transMat;
 	}
 
-	static glm::mat4 lookatCM(glm::mat4& baseMat,  glm::vec3& eye,  glm::vec3& center,  glm::vec3& up)
+	static glm::mat4 lookatCM(glm::mat4 baseMat,  glm::vec3 eye,  glm::vec3 center,  glm::vec3 up)
 	{
 		glm::mat4 lookAtMat;
 		glm::vec3 z = glm::normalize(eye - center);

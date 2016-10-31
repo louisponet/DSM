@@ -1,10 +1,9 @@
 #include <math.h>
 #include "../global.h"
 #include "sphere.h"
-#include "../utils/timer.h"
 #include "../utils/maths.h"
 
-Sphere::Sphere(glm::vec3& center, float radius, glm::vec3 colour, float specIntensity, float specPower, unsigned int Index) :
+Sphere::Sphere(glm::vec3 center, float radius, glm::vec3 colour, float specIntensity, float specPower, unsigned int Index) :
 	Renderable3D(BaseSphere::instance()->getVertices(), BaseSphere::instance()->getNormals(), BaseSphere::instance()->getIndices(), colour, specIntensity, specPower),center(center),radius(radius),index(Index)
 {
 

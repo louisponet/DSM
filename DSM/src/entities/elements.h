@@ -1,9 +1,12 @@
 #pragma once
+#ifdef __APPLE__
+#include <CoreFoundation/CoreFoundation.h>
+#endif
 #include <string>
 #include <vector>
 #include <fstream>
 #include <glm/glm.hpp>
-
+#include "../global.h"
 
 
 #include <fstream>
@@ -30,7 +33,16 @@ namespace elements {
 	{
 		std::vector<Element> ELEMENTS;
 		std::ifstream element_stream;
-		element_stream.open("src/entities/elements.txt");
+#ifdef __APPLE__
+        CFURLRef appUrlRef;
+        appUrlRef = CFBundleCopyResourceURL(CFBundleGetMainBundle(),CFSTR("/src/entities/elements.txt"),NULL,NULL);
+        CFStringRef filePathRef = CFURLCopyPath(appUrlRef);
+        const char* elementString = CFStringGetCStringPtr(filePathRef,kCFStringEncodingUTF8);
+#else
+        const char* elementString = "src/entities/elements.txt";
+#endif
+        element_stream.open(elementString);
+
 		Element Atomic;
 		ELEMENTS.clear();
 
@@ -55,6 +67,10 @@ namespace elements {
 			element_stream >> Atomic.Element_State;
 			ELEMENTS.push_back(Atomic);
 		}
+#ifdef __APPLE__
+        CFRelease(appUrlRef);
+        CFRelease(filePathRef);
+#endif
 		element_stream.close();
 		return ELEMENTS;
 	}

@@ -1,8 +1,8 @@
+#ifdef __APPLE__
+#include <CoreFoundation/CoreFoundation.h>
+#endif
 #include "objreader.h"
 #include <fstream>
-
-
-
 #ifdef _DEBUG
 #include <iostream>
 #endif // _DEBUG
@@ -16,14 +16,21 @@ objReader::~objReader()
 {
 }
 
-bool objReader::loadOBJ(const char*path, std::vector<glm::vec3>&out_vertices, std::vector<GLuint>&out_indices, std::vector<glm::vec3>&out_normals)
+bool objReader::loadOBJ(const char* path, std::vector<glm::vec3>&out_vertices, std::vector<GLuint>&out_indices, std::vector<glm::vec3>&out_normals)
 {
 	std::vector< GLuint > vertexIndices, normalIndices;
 	std::vector< glm::vec3 > temp_vertices;
 	std::vector< glm::vec3 > temp_normals;
 
-
-	FILE *file = fopen(path, "r");
+#ifdef __APPLE__
+		CFURLRef appUrlRef;
+        appUrlRef = CFBundleCopyResourceURL(CFBundleGetMainBundle(),CFStringCreateWithCString(NULL,path,kCFStringEncodingMacRoman),NULL,NULL);
+	    CFStringRef filePathRef = CFURLCopyPath(appUrlRef);
+	    const char* pathString = CFStringGetCStringPtr(filePathRef,kCFStringEncodingUTF8);
+#else
+	   const char* pathString = path;
+#endif
+	FILE *file = fopen(pathString, "r");
 	if (file == NULL)
 	{
 		printf("Impossible to open the file! \n");
@@ -67,5 +74,11 @@ bool objReader::loadOBJ(const char*path, std::vector<glm::vec3>&out_vertices, st
 		GLuint Index = out_indices[i];
 		out_normals[Index] = temp_normals[normalIndices[i]];
 	}
+
+#ifdef __APPLE__
+	    CFRelease(appUrlRef);
+	    CFRelease(filePathRef);
+#endif
+
 	return true;
 }

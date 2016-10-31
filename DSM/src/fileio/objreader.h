@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <glm\glm.hpp>
+#include <glm/glm.hpp>
 #include "../graphics/GL.h"
 
 class objReader

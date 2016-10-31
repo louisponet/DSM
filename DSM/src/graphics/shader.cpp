@@ -3,9 +3,16 @@
 #include <iostream>
 #include "../fileio/fileutils.h"
 #include "shader.h"
+#include "../global.h"
+#include <QDir>
 
 Shader::Shader(const char* vertPath, const char* fragPath):
-	m_VertPath(vertPath),m_FragPath(fragPath)
+    m_VertPath(vertPath),m_FragPath(fragPath)
+{
+
+}
+
+Shader::Shader()
 {
 
 }
@@ -19,8 +26,10 @@ void Shader::load(QOpenGLWidget* glwidget)
 	GLuint vertex = glCreateShader(GL_VERTEX_SHADER);
 	GLuint fragment = glCreateShader(GL_FRAGMENT_SHADER);
 
-	std::string vertSourceString = FileUtils::read_file(m_VertPath);
-	std::string fragSourceString = FileUtils::read_file(m_FragPath);
+    
+    std::string vertSourceString = FileUtils::read_file(m_VertPath);
+    std::string fragSourceString = FileUtils::read_file(m_FragPath);
+
 
 	const char* vertSource = vertSourceString.c_str();
 	const char* fragSource = fragSourceString.c_str();
@@ -96,14 +105,14 @@ void Shader::setLightProperties(const Light& light)  {
 
 }
 
-void Shader::setUniform3vec(const GLchar* uniform, glm::vec3& vec)  {
+void Shader::setUniform3vec(const GLchar* uniform, glm::vec3 vec)  {
 
 	glUniform3fv(glGetUniformLocation(m_ShaderID, uniform), 1,&vec[0]);
 
 	
 }
 
-void Shader::setUniform4mat(const char* uniform, glm::mat4& mat)  {
+void Shader::setUniform4mat(const char* uniform, glm::mat4 mat)  {
 
 	glUniformMatrix4fv(glGetUniformLocation(m_ShaderID, uniform), 1, GL_FALSE, &mat[0][0]);
 

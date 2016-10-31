@@ -22,6 +22,7 @@ void TableWidget::displayAtom(Particle& atom)
 	blockSignals(false);
 }
 
+
 void TableWidget::reset()
 {
 	blockSignals(true);

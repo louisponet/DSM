@@ -6,8 +6,8 @@
 class Renderable3D
 {
 protected:
-	Renderable3D(glm::vec3& c, float spec_int,float spec_pow);
-	Renderable3D(std::vector<glm::vec3>& vertices,  std::vector<glm::vec3>& normals,  std::vector<GLuint>& indices,  glm::vec3& c,  float spec_int,  float spec_pow);
+	Renderable3D(glm::vec3 c, float spec_int,float spec_pow);
+	Renderable3D(std::vector<glm::vec3> vertices,  std::vector<glm::vec3> normals,  std::vector<GLuint> indices,  glm::vec3 c,  float spec_int,  float spec_pow);
 
 
 public:

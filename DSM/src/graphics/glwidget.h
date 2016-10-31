@@ -1,13 +1,12 @@
 #pragma once
 
-#include <QOpenGLWidget>
+#include <QtWidgets/QOpenGLWidget>
 #include <vector>
 #include <QtGui/QMouseEvent>
 #include "GL.h"
 #include "shader.h"
 #include "../entities/structure.h"
 #include "camera.h"
-#include "../utils/timer.h"
 
 
 class MainWindow;
@@ -25,7 +24,6 @@ private:
 	Shader m_Shader;
 	Camera* m_Camera = NULL;
 
-	Timer m_Timer;
 	Light m_Light;
 	glm::mat4 m_ProjectionMatrix;
 	bool m_Testing = false;

@@ -1,6 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
-#include <QOpenGLWidget>
+#include <QtWidgets/QOpenGLWidget>
 #include "light.h"
 #include "../graphics/GL.h"
 
@@ -14,7 +14,8 @@ private:
 	Light m_Light;
 	QOpenGLWidget* m_glWidget;
 public:
-	Shader(const char* vertPath, const char* fragPath);
+    Shader(const char* vertPath, const char* fragPath);
+    Shader();
 	~Shader();
 
 	void enable();
@@ -22,8 +23,8 @@ public:
 	void load(QOpenGLWidget* glwidget);
 	void setLightProperties(const Light& light) ;
 	void setSelectedIndex(const unsigned int& index) ;
-	void setUniform3vec(const  GLchar* uniform, glm::vec3& vec) ;
-	void setUniform4mat(const char* uniform, glm::mat4& mat) ;
+	void setUniform3vec(const  GLchar* uniform, glm::vec3 vec) ;
+	void setUniform4mat(const char* uniform, glm::mat4 mat) ;
 	void disableDiffuseLighting() ;
 	void enableDiffuseLighting() ;
 

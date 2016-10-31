@@ -1,11 +1,14 @@
 ﻿#pragma once
 #ifndef ATOMWINDOW_HPP
 #define ATOMWINDOW_HPP
-#include <QWidget>
-#include <QListWidgetItem>
-#include <QString>
+#include <QtWidgets/QListWidgetItem>
+#include <QtCore/QString>
+#ifdef __APPLE__
+#include "../../ui_atomwindow.h"
+#else
 #include "ui_atomwindow.h"
-#include "../src/entities/particle.h"
+#endif
+#include "../entities/particle.h"
 
 class AtomWindow : public QWidget {
 	Q_OBJECT

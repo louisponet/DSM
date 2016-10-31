@@ -1,5 +1,5 @@
 #pragma once
-#include <QTableWidget>
+#include <QtWidgets/QTableWidget>
 #include "../entities/particle.h"
 
 class TableWidget :public QTableWidget
