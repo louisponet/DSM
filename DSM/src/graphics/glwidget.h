@@ -16,7 +16,8 @@ class GLWidget : public QOpenGLWidget, public GL
 	Q_OBJECT
 
 private:
-	std::vector<GLuint>* m_Vaos,*m_IndBufs;
+	std::vector<VAO*>* m_Vaos;
+	std::vector<VBO*>* m_IndBufs;
 	std::vector<GLuint>* m_NumVerticesList , *m_NumObjectsList;
 	std::vector<Structure*> m_Structures;
 	GLuint m_Vao,m_IndBuf, m_NumVertices, m_NumObjects;

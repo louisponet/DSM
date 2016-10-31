@@ -225,6 +225,9 @@
     <ClCompile Include="src\graphics\generator.cpp" />
     <ClCompile Include="src\graphics\glwidget.cpp" />
     <ClCompile Include="src\graphics\shader.cpp" />
+    <ClCompile Include="src\graphics\VAO.cpp" />
+    <ClCompile Include="src\graphics\VBO.cpp" />
+    <ClCompile Include="src\renderables\cone.cpp" />
     <ClCompile Include="src\renderables\Cube.cpp" />
     <ClCompile Include="src\renderables\cylinder.cpp" />
     <ClCompile Include="src\renderables\renderable3D.cpp" />
@@ -292,6 +295,9 @@
     <ClInclude Include="src\graphics\GL.h" />
     <ClInclude Include="src\graphics\light.h" />
     <ClInclude Include="src\graphics\shader.h" />
+    <ClInclude Include="src\graphics\VAO.h" />
+    <ClInclude Include="src\graphics\VBO.h" />
+    <ClInclude Include="src\renderables\cone.h" />
     <ClInclude Include="src\renderables\Cube.h" />
     <ClInclude Include="src\renderables\cylinder.h" />
     <ClInclude Include="src\renderables\renderable3D.h" />
@@ -497,6 +503,9 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="src\renderables\cone.obj" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

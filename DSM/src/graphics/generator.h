@@ -3,6 +3,8 @@
 #include <QtWidgets/QOpenGLWidget>
 #include "../entities/structure.h"
 #include "../graphics/GL.h"
+#include "VBO.h"
+#include "VAO.h"
 
 
 class Generator:private GL
@@ -31,11 +33,6 @@ public:
 
     void deleteCylinderBufs(Structure *structure);
 private:
-    void setupVaoVertBuf(GLuint* buf, float* bufBeginning,GLuint size);
-    void setupVaoColBuf(GLuint* buf, float* bufBeginning,GLuint size);
-    void setupVaoNormBuf(GLuint* buf, float* bufBeginning,GLuint size);
-    void setupVaoMatBuf(GLuint* buf, float* matBeginning,GLuint size);
-    void setupVaoIntBuf(GLuint* buf, float* bufBeginning,GLuint size);
-    void setupVaoPowBuf(GLuint* buf, float* bufBeginning,GLuint size);
+    void setupBuf(VBO* buf, float* bufBeginning,GLuint size);
 
 };

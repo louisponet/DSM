@@ -131,6 +131,15 @@
     <ClCompile Include="GeneratedFiles\qrc_DSMmainwindow.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\VAO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\VBO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderables\cone.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="src\graphics\glwidget.h">
@@ -231,6 +240,15 @@
     <ClInclude Include="GeneratedFiles\ui_DSMmainwindow.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\graphics\VAO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\VBO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderables\cone.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\entities\elements.txt" />
@@ -292,5 +310,8 @@
     <None Include="src\icons\tb_isosurface.xpm" />
     <None Include="src\icons\tools.xpm" />
     <None Include="src\fileio\templates\pw.in" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="src\renderables\cone.obj" />
   </ItemGroup>
 </Project>

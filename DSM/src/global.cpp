@@ -79,3 +79,30 @@ std::vector<GLuint> BaseCube::getIndices()
 {
 	return indices;
 }
+
+
+BaseCone::BaseCone() :Cone()
+{
+
+}
+
+BaseCone::~BaseCone()
+{
+	if (cone_instance)
+	{
+		delete cone_instance;
+	}
+}
+
+std::vector<glm::vec3> BaseCone::getVertices()
+{
+	return vertices;
+}
+std::vector<glm::vec3> BaseCone::getNormals()
+{
+	return normals;
+}
+std::vector<GLuint> BaseCone::getIndices()
+{
+	return indices;
+}

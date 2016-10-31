@@ -3,7 +3,8 @@
 
 #include "renderables/sphere.h"
 #include "renderables/cylinder.h"
-#include "renderables/Cube.h"
+#include "renderables/Cube.h "
+#include "renderables/cone.h"
 
 namespace global {
 static const char* vertexShaderPath;
@@ -81,6 +82,29 @@ public:
 	std::vector<GLuint> getIndices();
 };
 
+class BaseCone : private Cone
+{
+	static BaseCone* cone_instance;
+private:
+	BaseCone();
+
+public:
+	~BaseCone();
+	static BaseCone* instance()
+	{
+		if (!cone_instance)
+			cone_instance = new BaseCone();
+		return cone_instance;
+
+	};
+
+	std::vector<glm::vec3> getVertices();
+	std::vector <glm::vec3> getNormals();
+	std::vector<GLuint> getIndices();
+};
+
 template <typename T> int sgn(T val) {
 	return (T(0) < val) - (val < T(0));
 }
+
+

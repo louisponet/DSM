@@ -1,6 +1,4 @@
-#ifdef __APPLE__
-#include <CoreFoundation/CoreFoundation.h>
-#endif
+
 #include <cmath>
 #include "../global.h"
 #include "Cube.h"

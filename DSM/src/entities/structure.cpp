@@ -16,7 +16,17 @@ Structure::Structure()
 
 Structure::~Structure()
 {
-
+	for (int i = 0; i < 3; i++)
+	{
+		delete vaos[i];
+		delete vertBufs[i];
+		delete colBufs[i];
+		delete normBufs[i];
+		delete matBufs[i];
+		delete intBufs[i];
+		delete powBufs[i];
+	}
+	delete numberBufs[0];
 }
 
 //------------------All external modifier commands----------------------//

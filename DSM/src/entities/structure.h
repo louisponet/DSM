@@ -6,6 +6,9 @@
 #include "../renderables/Cube.h"
 #include "bond.h"
 #include "../graphics/camera.h"
+#include "../graphics/VBO.h"
+#include "../graphics/VAO.h"
+
 
 class Structure
 {
@@ -26,7 +29,8 @@ public:
 	std::vector<Sphere> spheres;
 	std::vector<Cube> cubes;
 	std::vector<glm::mat4> imMats;
-	std::vector<GLuint> vertBufs, indBufs, normBufs, colBufs, matBufs, intBufs, powBufs, numberBufs,vaos;
+	std::vector<VBO*> vertBufs, indBufs, normBufs, colBufs, matBufs, intBufs, powBufs, numberBufs;
+	std::vector<VAO*> vaos;
 	std::vector<unsigned int> numVertsList, numObjsList;
 	Camera camera;
 	unsigned int v1PosImCount = 0;

@@ -97,13 +97,13 @@ void GLWidget::paintGL()
 					{
 						continue;
 					}
-					glBindVertexArray((*m_Vaos)[i]);
-					GLenum error = glGetError();
-					if (error != GL_NO_ERROR)
-					{
-                        std::cout << "OpenGL Error trying to bind vertexarray: " << error << std::endl;
-					}
-					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*m_IndBufs)[i]);
+					(*m_Vaos)[i]->bind();
+//					GLenum error = glGetError();
+//					if (error != GL_NO_ERROR)
+//					{
+//                        std::cout << "OpenGL Error trying to bind vertexarray: " << error << std::endl;
+//					}
+					(*m_IndBufs)[i]->bind();
 					glDrawElementsInstanced(GL_TRIANGLES, (*m_NumVerticesList)[i], GL_UNSIGNED_INT, 0, (*m_NumObjectsList)[i]);
 
 				}
