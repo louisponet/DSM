@@ -23,15 +23,6 @@ void Generator::init(QOpenGLWidget* widget)
 	m_glWidget = widget;
 }
 
-void Generator::setupBuf(VBO *buf, float *bufBeginning, GLuint size)
-{
-	buf->bind();
-	buf->submitData(bufBeginning, size);
-	buf->unbind();
-}
-
-
-
 void Generator::initStructureBufs(Structure* structure)
 {
 	m_glWidget->makeCurrent();
@@ -224,18 +215,36 @@ void Generator::setupCylinderBufs(Structure *structure)
     if (!cylinders.empty())
     {
         structure->vaos[1]->bind();
-        setupBuf(structure->vertBufs[1],&cylVertices[0][0],cylVertices.size()*sizeof(glm::vec3));
-        setupBuf(structure->colBufs[1],&cylColours[0],cylColours.size()*sizeof(GLfloat));
-        setupBuf(structure->normBufs[1],&cylNormals[0][0],cylNormals.size()*sizeof(glm::vec3));
-        setupBuf(structure->matBufs[1],&cylMats[0][0][0],cylMats.size() * sizeof(glm::mat4));
-        setupBuf(structure->intBufs[1],&cylInts[0],cylInts.size() * sizeof(GLfloat));
-        setupBuf(structure->powBufs[1],&cylPows[0],cylPows.size()*sizeof(GLfloat));
+		structure->vertBufs[1]->bind();
+		structure->vertBufs[1]->allocate(cylVertices.size() * sizeof(glm::vec3), GL_DYNAMIC_DRAW);
+		structure->vertBufs[1]->submitData(&cylVertices[0][0], cylVertices.size() * sizeof(glm::vec3));
+		structure->colBufs[1]->bind();
+		structure->colBufs[1]->allocate(cylColours.size() * sizeof(GLfloat), GL_DYNAMIC_DRAW);
+		structure->colBufs[1]->submitData(&cylColours[0], cylColours.size() * sizeof(GLfloat));
+		structure->normBufs[1]->bind();
+		structure->normBufs[1]->allocate(cylNormals.size() * sizeof(glm::vec3), GL_DYNAMIC_DRAW);
+		structure->normBufs[1]->submitData(&cylNormals[0][0], cylNormals.size() * sizeof(glm::vec3));
+		structure->matBufs[1]->bind();
+		structure->matBufs[1]->allocate(cylMats.size() * sizeof(glm::mat4), GL_DYNAMIC_DRAW);
+		structure->matBufs[1]->submitData(&cylMats[0][0][0], cylMats.size() * sizeof(glm::mat4));
+		structure->intBufs[1]->bind();
+		structure->intBufs[1]->allocate(cylInts.size() * sizeof(GLfloat), GL_DYNAMIC_DRAW);
+		structure->intBufs[1]->submitData(&cylInts[0], cylInts.size() * sizeof(GLfloat));
+		structure->powBufs[1]->bind();
+		structure->powBufs[1]->allocate(cylPows.size() * sizeof(GLfloat), GL_DYNAMIC_DRAW);
+		structure->powBufs[1]->submitData(&cylPows[0], cylPows.size() * sizeof(GLfloat));
 		structure->vaos[1]->submitVBO(structure->vertBufs[1], VAO::VERT);
 		structure->vaos[1]->submitVBO(structure->colBufs[1], VAO::COL);
 		structure->vaos[1]->submitVBO(structure->normBufs[1], VAO::NORM);
 		structure->vaos[1]->submitVBO(structure->matBufs[1], VAO::MAT);
 		structure->vaos[1]->submitVBO(structure->intBufs[1], VAO::INT);
 		structure->vaos[1]->submitVBO(structure->powBufs[1], VAO::POW);
+		GLenum error = glGetError();
+		if (error != GL_NO_ERROR)
+		{
+			std::cout << "OpenGL Error while setting up cylinder buffers: " << error << std::endl;
+		}
+		glBindBuffer(GL_ARRAY_BUFFER,0);
 		
 
     }
@@ -256,12 +265,6 @@ void Generator::setupCylinderBufs(Structure *structure)
 	structure->indBufs[1]->unbind();
     structure->numVertsList[1]=indices.size();
 	structure->vaos[1]->unbind();
-	GLenum error = glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		std::cout << "OpenGL Error while setting up cylinder buffers: " << error << std::endl;
-	}
-    glBindBuffer(GL_ARRAY_BUFFER,0);
 
     m_glWidget->doneCurrent();
 
@@ -284,15 +287,16 @@ void Generator::updateStructureBufs(Structure* structure)
 	structure->vaos[0]->bind();
 	structure->matBufs[0]->bind();
 	structure->matBufs[0]->allocate(mats.size() * sizeof(glm::mat4), GL_DYNAMIC_DRAW);
+	structure->matBufs[0]->submitData(&mats[0][0][0], mats.size() * sizeof(glm::mat4));
+	structure->matBufs[0]->unbind();
+	structure->vaos[0]->submitVBO(structure->matBufs[0], VAO::MAT);
+    setupCylinderBufs(structure);
+	structure->vaos[0]->unbind();
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
 	{
 		std::cout << "OpenGL Error while updating Structure buffers: " << error << std::endl;
 	}
-    setupBuf(structure->matBufs[0],&mats[0][0][0],mats.size()*sizeof(glm::mat4));
-	structure->vaos[0]->submitVBO(structure->matBufs[0], VAO::MAT);
-    setupCylinderBufs(structure);
-	structure->vaos[0]->unbind();
 
 	m_glWidget->doneCurrent();
 
@@ -486,154 +490,6 @@ void Generator::genVaos(Structure* structure)
 	{
 		std::cout << "OpenGL Error1: " << error << std::endl;
 	}
-//	if (!cylinders.empty())
-//	{
-//		std::vector<glm::vec3>cylVertices = BaseCylinder::instance()->getVertices();
-//		std::vector<glm::vec3> cylNormals = BaseCylinder::instance()->getNormals();
-//		std::vector<GLuint> cylIndices = BaseCylinder::instance()->getIndices();
-//		std::vector<GLfloat> cylColours;
-//		std::vector<GLfloat> cylInts;
-//		std::vector<GLfloat> cylPows;
-//		std::vector<glm::mat4> cylMats;
-//
-//		for (unsigned int i = 0; i < cylinders.size(); i++)
-//		{
-//			cylColours.push_back(cylinders[i].colour.x / 65535.0f);
-//			cylColours.push_back(cylinders[i].colour.y / 65535.0f);
-//			cylColours.push_back(cylinders[i].colour.z / 65535.0f);
-//			cylInts.push_back(cylinders[i].specIntensity);
-//			cylPows.push_back(cylinders[i].specPower);
-//			cylMats.push_back(cylinders[i].mat);
-//			for (unsigned int i1 =0; i1<imMats.size();i1++)
-//			{
-//				cylColours.push_back(cylinders[i].colour.x / 65535.0f);
-//				cylColours.push_back(cylinders[i].colour.y / 65535.0f);
-//				cylColours.push_back(cylinders[i].colour.z / 65535.0f);
-//				cylInts.push_back(cylinders[i].specIntensity);
-//				cylPows.push_back(cylinders[i].specPower);
-//				cylMats.push_back(imMats[i1]*cylinders[i].mat);
-//			}
-//
-//
-//		}
-//		structure->numVertsList.push_back(cylIndices.size());
-//		structure->numObjsList.push_back(cylPows.size());
-//
-//		glBindVertexArray(structure->vaos[1]);
-//		glBindBuffer(GL_ARRAY_BUFFER, structure->vertBufs[1]);
-//		glBufferSubData(GL_ARRAY_BUFFER,0, cylVertices.size() * sizeof(glm::vec3), &cylVertices[0]);
-//		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-//		glBindBuffer(GL_ARRAY_BUFFER, structure->colBufs[1]);
-//		glBufferSubData(GL_ARRAY_BUFFER,0, cylColours.size() * sizeof(GLfloat), &cylColours[0]);
-//		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-//		glBindBuffer(GL_ARRAY_BUFFER, structure->normBufs[1]);
-//		glBufferSubData(GL_ARRAY_BUFFER,0, cylNormals.size() * sizeof(glm::vec3), &cylNormals[0]);
-//		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-//        setupVaoMatBuf(&(structure->matBufs[1]),&cylMats[0][0][0],cylMats.size());
-//
-//		glBindBuffer(GL_ARRAY_BUFFER, structure->intBufs[1]);
-//		glBufferSubData(GL_ARRAY_BUFFER,0, cylInts.size() * sizeof(GLfloat), &cylInts[0]);
-//		glVertexAttribPointer(7, 1, GL_FLOAT, GL_FALSE, 0, (void*)0);
-//		glBindBuffer(GL_ARRAY_BUFFER, structure->powBufs[1]);
-//		glBufferSubData(GL_ARRAY_BUFFER,0, cylPows.size() * sizeof(GLfloat), &cylPows[0]);
-//		glVertexAttribPointer(8, 1, GL_FLOAT, GL_FALSE, 0, (void*)0);
-//		glEnableVertexAttribArray(0);
-//		glEnableVertexAttribArray(1);
-//		glEnableVertexAttribArray(2);
-//		glEnableVertexAttribArray(3);
-//		glEnableVertexAttribArray(4);
-//		glEnableVertexAttribArray(5);
-//		glEnableVertexAttribArray(6);
-//		glEnableVertexAttribArray(7);
-//		glEnableVertexAttribArray(8);
-//
-//		glVertexAttribDivisor(1, 1);
-//		glVertexAttribDivisor(3, 1);
-//		glVertexAttribDivisor(4, 1);
-//		glVertexAttribDivisor(5, 1);
-//		glVertexAttribDivisor(6, 1);
-//		glVertexAttribDivisor(7, 1);
-//		glVertexAttribDivisor(8, 1);
-//		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, structure->indBufs[1]);
-//		glBufferSubData(GL_ELEMENT_ARRAY_BUFFER,0, cylIndices.size() * sizeof(GLuint), &cylIndices[0]);
-//	}
-//	else
-//	{
-//		structure->numVertsList.push_back(0);
-//		structure->numObjsList.push_back(0);
-//	}
-//	error = glGetError();
-//	if (error != GL_NO_ERROR)
-//	{
-//		std::cout << "OpenGL Error2: " << error << std::endl;
-//	}
-//
-//	std::vector<glm::vec3> cubVertices=BaseCube::instance()->getVertices();
-//	std::vector < glm::vec3 > cubNormals = BaseCube::instance()->getNormals();
-//	std::vector<GLuint> cubIndices = BaseCube::instance()->getIndices();
-//	std::vector<GLfloat> cubColours;
-//	std::vector<GLfloat> cubInts;
-//	std::vector<GLfloat> cubPows;
-//	std::vector<glm::mat4> cubMats;
-//
-//	for (unsigned int i = 0; i < cubes.size(); i++)
-//	{
-//        cubColours.push_back(cubes[i].colour.x );
-//        cubColours.push_back(cubes[i].colour.y );
-//        cubColours.push_back(cubes[i].colour.z );
-//		cubInts.push_back(cubes[i].specIntensity);
-//		cubPows.push_back(cubes[i].specPower);
-//		cubMats.push_back(cubes[i].mat);
-//		for (unsigned int i1 = 0;i1<imMats.size();i1++)
-//		{
-//            cubColours.push_back(cubes[i].colour.x );
-//            cubColours.push_back(cubes[i].colour.y );
-//            cubColours.push_back(cubes[i].colour.z );
-//			cubInts.push_back(cubes[i].specIntensity);
-//			cubPows.push_back(cubes[i].specPower);
-//			cubMats.push_back(imMats[i1]*cubes[i].mat);
-//		}
-//	}
-//	structure->numVertsList.push_back(cubIndices.size());
-//	structure->numObjsList.push_back(cubPows.size());
-//
-//	glBindVertexArray(structure->vaos[2]);
-//	glBindBuffer(GL_ARRAY_BUFFER, structure->vertBufs[2]);
-//	glBufferSubData(GL_ARRAY_BUFFER,0, cubVertices.size() * sizeof(glm::vec3), &cubVertices[0]);
-//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-//	glBindBuffer(GL_ARRAY_BUFFER, structure->colBufs[2]);
-//	glBufferSubData(GL_ARRAY_BUFFER,0, cubColours.size() * sizeof(GLfloat), &cubColours[0]);
-//	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-//	glBindBuffer(GL_ARRAY_BUFFER, structure->normBufs[2]);
-//	glBufferSubData(GL_ARRAY_BUFFER,0, cubNormals.size() * sizeof(glm::vec3), &cubNormals[0]);
-//	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-//    setupVaoMatBuf(&(structure->matBufs[2]),&cubMats[0][0][0],cubMats.size());
-//	glBindBuffer(GL_ARRAY_BUFFER, structure->intBufs[2]);
-//	glBufferSubData(GL_ARRAY_BUFFER,0, cubInts.size() * sizeof(GLfloat), &cubInts[0]);
-//	glVertexAttribPointer(7, 1, GL_FLOAT, GL_FALSE, 0, (void*)0);
-//	glBindBuffer(GL_ARRAY_BUFFER, structure->powBufs[2]);
-//	glBufferSubData(GL_ARRAY_BUFFER,0, cubPows.size() * sizeof(GLfloat), &cubPows[0]);
-//	glVertexAttribPointer(8, 1, GL_FLOAT, GL_FALSE, 0, (void*)0);
-//	glEnableVertexAttribArray(0);
-//	glEnableVertexAttribArray(1);
-//	glEnableVertexAttribArray(2);
-//	glEnableVertexAttribArray(3);
-//	glEnableVertexAttribArray(4);
-//	glEnableVertexAttribArray(5);
-//	glEnableVertexAttribArray(6);
-//	glEnableVertexAttribArray(7);
-//	glEnableVertexAttribArray(8);
-//
-//	glVertexAttribDivisor(1, 1);
-//	glVertexAttribDivisor(3, 1);
-//	glVertexAttribDivisor(4, 1);
-//	glVertexAttribDivisor(5, 1);
-//	glVertexAttribDivisor(6, 1);
-//	glVertexAttribDivisor(7, 1);
-//	glVertexAttribDivisor(8, 1);
-//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, structure->indBufs[2]);
-//	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER,0, cubIndices.size() * sizeof(GLuint), &cubIndices[0]);
-
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
@@ -667,84 +523,3 @@ void Generator::deleteStructureBuffers(Structure * structure)
 	m_glWidget->doneCurrent();
 }
 
-// void Generator::genVao(GLuint& vao,GLuint& indBuf, GLuint& numVertices, GLuint& numObjects, std::vector<Renderable3D>& renderables)
-// {
-// 	std::vector<glm::vec3> vertices, normals, colours;
-// 	std::vector<glm::mat4>mats;
-// 	std::vector<GLuint> indices;
-// 	std::vector<GLuint> numbers;
-// 	std::vector<GLfloat> specInts, specPows;
-// 	for (unsigned int i = 0; i < renderables.size(); i++)
-// 	{
-// 		vertices.insert(vertices.end(), renderables[i].vertices.begin(), renderables[i].vertices.end()); 
-// 		normals.insert(normals.end(), renderables[i].normals.begin(), renderables[i].normals.end());
-// 		indices.insert(indices.end(), renderables[i].indices.begin(), renderables[i].indices.end());
-// 		colours.push_back(renderables[i].colour);
-// 		specInts.push_back(renderables[i].specIntensity);
-// 		specPows.push_back(renderables[i].specPower);
-// 		mats.push_back(renderables[i].mat);
-// 		numbers.push_back(renderables[i].index);
-// 	}
-// 
-// 	glBindVertexArray(vao);
-// 	GLuint vertBuf, colBuf, normBuf, matBuf, intBuf, powBuf, numBuf;
-// 	glGenBuffers(1, &vertBuf);
-// 	glBindBuffer(GL_ARRAY_BUFFER, vertBuf);
-// 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0][0], GL_STATIC_DRAW);
-// 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-// 	glGenBuffers(1, &colBuf);
-// 	glBindBuffer(GL_ARRAY_BUFFER, colBuf);
-// 	glBufferData(GL_ARRAY_BUFFER, colours.size()*sizeof(glm::vec3), &colours[0][0], GL_STATIC_DRAW);
-// 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-// 	glGenBuffers(1, &normBuf);
-// 	glBindBuffer(GL_ARRAY_BUFFER, normBuf);
-// 	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0][0], GL_STATIC_DRAW);
-// 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-// 	glGenBuffers(1, &matBuf);
-// 	glBindBuffer(GL_ARRAY_BUFFER, matBuf);
-// 	glBufferData(GL_ARRAY_BUFFER, mats.size()*sizeof(glm::mat4), &mats[0][0][0], GL_STATIC_DRAW);
-// 	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
-// 	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)16);
-// 	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)32);
-// 	glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)48);
-// 	glGenBuffers(1, &intBuf);
-// 	glBindBuffer(GL_ARRAY_BUFFER, intBuf);
-// 	glBufferData(GL_ARRAY_BUFFER, specInts.size()*sizeof(GLfloat), &specInts[0], GL_STATIC_DRAW);
-// 	glVertexAttribPointer(7, 1, GL_FLOAT, GL_FALSE, 0, (void*)0);
-// 	glGenBuffers(1, &powBuf);
-// 	glBindBuffer(GL_ARRAY_BUFFER, powBuf);
-// 	glBufferData(GL_ARRAY_BUFFER, specPows.size()*sizeof(GLfloat), &specPows[0], GL_STATIC_DRAW);
-// 	glVertexAttribPointer(8, 1, GL_FLOAT, GL_FALSE, 0, (void*)0);
-// 	glGenBuffers(1, &numBuf);
-// 	glBindBuffer(GL_ARRAY_BUFFER, numBuf);
-// 	glBufferData(GL_ARRAY_BUFFER, indices.size()*sizeof(GLuint), &numbers[0], GL_STATIC_DRAW);
-// 	glVertexAttribPointer(9, 1, GL_UNSIGNED_INT, GL_FALSE, 0, (void*)0);
-// 
-// 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indBuf);
-// 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
-// 	glEnableVertexAttribArray(0);
-// 	glEnableVertexAttribArray(1);
-// 	glEnableVertexAttribArray(2);
-// 	glEnableVertexAttribArray(3);
-// 	glEnableVertexAttribArray(4);
-// 	glEnableVertexAttribArray(5);
-// 	glEnableVertexAttribArray(6);
-// 	glEnableVertexAttribArray(7);
-// 	glEnableVertexAttribArray(8);
-// 	glEnableVertexAttribArray(9);
-// 	/*glVertexAttribDivisor(0, 1);*/
-// 	glVertexAttribDivisor(1, 1);
-// /*	glVertexAttribDivisor(2, 1);*/
-// 	glVertexAttribDivisor(3, 1);
-// 	glVertexAttribDivisor(4, 1);
-// 	glVertexAttribDivisor(5, 1);
-// 	glVertexAttribDivisor(6, 1);
-// 	glVertexAttribDivisor(7, 1);
-// 	glVertexAttribDivisor(8, 1);
-// 	glVertexAttribDivisor(9, 1);
-// 	numVertices = indices.size();
-// 	numObjects = numbers.size();
-// 	glBindBuffer(GL_ARRAY_BUFFER,0);
-// 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-// 	glBindVertexArray(0);
-// }

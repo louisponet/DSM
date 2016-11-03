@@ -311,7 +311,4 @@
     <None Include="src\icons\tools.xpm" />
     <None Include="src\fileio\templates\pw.in" />
   </ItemGroup>
-  <ItemGroup>
-    <Object Include="src\renderables\cone.obj" />
-  </ItemGroup>
 </Project>

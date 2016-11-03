@@ -5,6 +5,7 @@
 #include "structure.h"
 #include "../graphics/generator.h"
 #include "../utils/maths.h"
+#include "../utils/timer.h"
 
 #ifdef _DEBUG
 #include <iostream>
@@ -113,6 +114,7 @@ void Structure::updateImageMats()
 
 void Structure::updateAtomCoords(uint& index, glm::dvec3 new_coords)
 {
+
     new_coords = glm::inverse(m_Cell)*new_coords;
 	glm::dvec3 oldCoords = m_Atoms[index].coords;
     if(new_coords[0]>1.0f)
@@ -132,6 +134,7 @@ void Structure::updateAtomCoords(uint& index, glm::dvec3 new_coords)
 	regenBonds(index, oldCoords);
 	edited = true;
 	Generator::instance()->updateStructureBufs(this);
+
 }
 
 void Structure::create()

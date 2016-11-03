@@ -33,6 +33,6 @@ public:
 
     void deleteCylinderBufs(Structure *structure);
 private:
-    void setupBuf(VBO* buf, float* bufBeginning,GLuint size);
+   
 
 };

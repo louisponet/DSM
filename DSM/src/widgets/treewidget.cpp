@@ -24,7 +24,7 @@ void TreeWidget::addStructure(Structure* structure)
     CFStringRef filePathRef = CFURLCopyPath(appUrlRef);
     const char* pathString = CFStringGetCStringPtr(filePathRef,kCFStringEncodingUTF8);
 #else
-    const char* pathString = "/src/icons";
+    const char* pathString = "src/icons";
 #endif
     item1->setIcon(0, QIcon((QString(pathString)+QString("/box.xpm")).toStdString().c_str()));
 	item1->setText(0, structure->name);

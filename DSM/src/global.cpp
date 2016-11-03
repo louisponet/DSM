@@ -88,10 +88,7 @@ BaseCone::BaseCone() :Cone()
 
 BaseCone::~BaseCone()
 {
-	if (cone_instance)
-	{
-		delete cone_instance;
-	}
+	
 }
 
 std::vector<glm::vec3> BaseCone::getVertices()
