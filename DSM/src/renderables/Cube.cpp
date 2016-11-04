@@ -42,6 +42,32 @@ void Cube::initInfo()
 	vertices.reserve(8);
 	normals.reserve(8);
 	indices.reserve(36);
-    reader.loadOBJ("src/renderables/cube.txt", vertices, indices, normals);
+    reader.loadOBJ1("src/renderables/cube.txt", vertices, indices, normals);
 
+}
+
+BaseCube::BaseCube() :Cube()
+{
+
+}
+
+BaseCube::~BaseCube()
+{
+	if (cub_instance)
+	{
+		delete cub_instance;
+	}
+}
+
+std::vector<glm::vec3> BaseCube::getVertices()
+{
+	return vertices;
+}
+std::vector<glm::vec3> BaseCube::getNormals()
+{
+	return normals;
+}
+std::vector<GLuint> BaseCube::getIndices()
+{
+	return indices;
 }

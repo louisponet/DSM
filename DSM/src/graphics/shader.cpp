@@ -76,33 +76,6 @@ void Shader::load(QOpenGLWidget* glwidget)
 	glDeleteShader(vertex);
 	glDeleteShader(fragment);
 
-	initLocations();
-}
-
-void Shader::initLocations() {
-	enable();
-	m_SelectedIndexLoc = glGetUniformLocation(m_ShaderID, "selected_index");
-	m_ColourLoc = glGetUniformLocation(m_ShaderID, "gpoint_light.colour");
-	m_AmbIntensityLoc = glGetUniformLocation(m_ShaderID, "gpoint_light.amb_intensity");
-	m_DiffIntensityLoc = glGetUniformLocation(m_ShaderID, "gpoint_light.diff_intensity");
-	m_posLoc = glGetUniformLocation(m_ShaderID, "gpoint_light.position");
-	disable();
-}
-
-void Shader::setSelectedIndex(const unsigned int& index)  {
-	
-	glUniform1f(m_SelectedIndexLoc, (GLfloat)index);
-
-}
-
-void Shader::setLightProperties(const Light& light)  {
-	m_Light = light;
-
-	glUniform3f(m_ColourLoc, light.colour.x, light.colour.y, light.colour.z);
-	glUniform1f(m_AmbIntensityLoc, light.ambIntensity);
-	glUniform1f(m_DiffIntensityLoc, light.diffIntensity);
-	glUniform3f(m_posLoc, light.center.x, light.center.y, light.center.z);
-
 }
 
 void Shader::setUniform3vec(const GLchar* uniform, glm::vec3 vec)  {
@@ -117,21 +90,6 @@ void Shader::setUniform4mat(const char* uniform, glm::mat4 mat)  {
 	glUniformMatrix4fv(glGetUniformLocation(m_ShaderID, uniform), 1, GL_FALSE, &mat[0][0]);
 
 }
-
-void Shader::disableDiffuseLighting() {
-
-	glUniform1f(m_DiffIntensityLoc, 0.0f);
-	glUniform1f(m_AmbIntensityLoc, 0.4f);
-
-}
-
-void Shader::enableDiffuseLighting() {
-
-	glUniform1f(m_DiffIntensityLoc, m_Light.diffIntensity);
-	glUniform1f(m_AmbIntensityLoc, m_Light.ambIntensity);
-
-}
-
 
 void Shader::enable()  {
 

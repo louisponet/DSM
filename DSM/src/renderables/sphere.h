@@ -21,3 +21,24 @@ public:
 	glm::vec3 center;
 	uint index;
 };
+
+class BaseSphere : private Sphere
+{
+	static BaseSphere* sph_instance;
+private:
+	BaseSphere();
+
+public:
+	~BaseSphere();
+	static BaseSphere* instance()
+	{
+		if (!sph_instance)
+			sph_instance = new BaseSphere();
+		return sph_instance;
+
+	};
+
+	std::vector<glm::vec3> getVertices();
+	std::vector <glm::vec3> getNormals();
+	std::vector<GLuint> getIndices();
+};

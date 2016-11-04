@@ -15,7 +15,7 @@ public:
 
 	void allocate(GLuint size,GLenum usage);
 	void submitData(void* data,GLuint size);
-
+	void allocateAndSubmit(void* data, GLuint size, GLenum usage);
 private:
 	GLenum m_target;
 	GLuint m_ID;

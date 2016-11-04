@@ -225,6 +225,8 @@
     <ClCompile Include="src\graphics\generator.cpp" />
     <ClCompile Include="src\graphics\glwidget.cpp" />
     <ClCompile Include="src\graphics\shader.cpp" />
+    <ClCompile Include="src\graphics\shader2D.cpp" />
+    <ClCompile Include="src\graphics\shader3D.cpp" />
     <ClCompile Include="src\graphics\VAO.cpp" />
     <ClCompile Include="src\graphics\VBO.cpp" />
     <ClCompile Include="src\renderables\cone.cpp" />
@@ -295,6 +297,8 @@
     <ClInclude Include="src\graphics\GL.h" />
     <ClInclude Include="src\graphics\light.h" />
     <ClInclude Include="src\graphics\shader.h" />
+    <ClInclude Include="src\graphics\shader2D.h" />
+    <ClInclude Include="src\graphics\shader3D.h" />
     <ClInclude Include="src\graphics\VAO.h" />
     <ClInclude Include="src\graphics\VBO.h" />
     <ClInclude Include="src\renderables\cone.h" />
@@ -418,6 +422,8 @@
     <None Include="gdisTest3.pri" />
     <None Include="gdisTest3.pro" />
     <None Include="src\fileio\templates\pw.in" />
+    <None Include="src\graphics\shaders\2D.frag" />
+    <None Include="src\graphics\shaders\2D.vert" />
     <None Include="src\graphics\shaders\main.frag" />
     <None Include="src\graphics\shaders\main.vert" />
     <None Include="src\graphics\shaders\test.frag" />

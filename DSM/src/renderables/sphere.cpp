@@ -102,3 +102,29 @@ Sphere::~Sphere()
 {
 
 }
+
+BaseSphere::BaseSphere() :Sphere()
+{
+
+}
+
+BaseSphere::~BaseSphere()
+{
+	if (sph_instance)
+	{
+		delete sph_instance;
+	}
+}
+
+std::vector<glm::vec3> BaseSphere::getVertices()
+{
+	return vertices;
+}
+std::vector<glm::vec3> BaseSphere::getNormals()
+{
+	return normals;
+}
+std::vector<GLuint> BaseSphere::getIndices()
+{
+	return indices;
+}

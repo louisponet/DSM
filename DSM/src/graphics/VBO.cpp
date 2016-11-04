@@ -41,3 +41,8 @@ void VBO::submitData(void* data, GLuint size)
 {
 	glBufferSubData(m_target, 0, size, data);
 }
+
+void VBO::allocateAndSubmit(void * data,GLuint size, GLenum usage)
+{
+	glBufferData(m_target, size, data, usage);
+}

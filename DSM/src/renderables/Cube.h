@@ -18,3 +18,24 @@ private:
 	float width;
 	void initInfo() override;
 };
+
+class BaseCube : private Cube
+{
+	static BaseCube* cub_instance;
+private:
+	BaseCube();
+
+public:
+	~BaseCube();
+	static BaseCube* instance()
+	{
+		if (!cub_instance)
+			cub_instance = new BaseCube();
+		return cub_instance;
+
+	};
+
+	std::vector<glm::vec3> getVertices();
+	std::vector <glm::vec3> getNormals();
+	std::vector<GLuint> getIndices();
+};

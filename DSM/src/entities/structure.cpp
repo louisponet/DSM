@@ -19,14 +19,35 @@ Structure::~Structure()
 {
 	for (int i = 0; i < 3; i++)
 	{
+		vaos[i]->bind();
+		vaos[i]->del();
+		vaos[i]->unbind();
 		delete vaos[i];
+		vertBufs[i]->bind();
+		vertBufs[i]->del();
 		delete vertBufs[i];
+		colBufs[i]->bind();
+		colBufs[i]->del();
 		delete colBufs[i];
+		normBufs[i]->bind();
+		normBufs[i]->del();
 		delete normBufs[i];
+		matBufs[i]->bind();
+		matBufs[i]->del();
 		delete matBufs[i];
+		intBufs[i]->bind();
+		intBufs[i]->del();
 		delete intBufs[i];
+		powBufs[i]->bind();
+		powBufs[i]->del();
 		delete powBufs[i];
+		indBufs[i]->bind();
+		indBufs[i]->del();
+		delete indBufs[i];
 	}
+	numberBufs[0]->bind();
+	numberBufs[0]->del();
+	numberBufs[0]->unbind();
 	delete numberBufs[0];
 }
 
@@ -458,7 +479,7 @@ void Structure::genBonds()
 	for (unsigned int i = 0; i < m_Bonds.size(); i++)
 	{
 		Particle& atom1=m_Bonds[i].atom1, &atom2=m_Bonds[i].atom2;
-        cylinders.push_back(Cylinder((glm::vec3)atom1.coords, (glm::vec3) atom2.coords, m_BondScale, atom1.getColour(), 0.0f, 1.0f));
+        cylinders.push_back(Cylinder((glm::vec3)atom1.coords, (glm::vec3) atom2.coords, m_BondScale, atom1.getColour(), 0.0f, 1.0f, Cylinder::STRUCTURE));
 	}
 
 
@@ -505,8 +526,8 @@ void Structure::regenBonds(unsigned int& index, glm::dvec3& oldCoords)
 			m_Bonds.push_back(Bond(atom1, atom2, atom1.getColour()));
 			m_Bonds.push_back(Bond(atom2, atom1, atom2.getColour()));
 
-            cylinders.push_back(Cylinder((glm::vec3) atom1.coords,(glm::vec3) atom2.coords, m_BondScale, atom1.getColour(), 0.0f, 1.0f));
-            cylinders.push_back(Cylinder((glm::vec3) atom2.coords,(glm::vec3) atom1.coords, m_BondScale, atom2.getColour(), 0.0f, 1.0f));
+            cylinders.push_back(Cylinder((glm::vec3) atom1.coords,(glm::vec3) atom2.coords, m_BondScale, atom1.getColour(), 0.0f, 1.0f, Cylinder::STRUCTURE));
+            cylinders.push_back(Cylinder((glm::vec3) atom2.coords,(glm::vec3) atom1.coords, m_BondScale, atom2.getColour(), 0.0f, 1.0f, Cylinder::STRUCTURE));
 
 		}
 	}
@@ -519,7 +540,7 @@ void Structure::regenBonds(unsigned int& index, glm::dvec3& oldCoords)
         if (cov1*m_CovaScale + cov2*m_CovaScale> dist )
         {
 			m_Bonds.push_back(Bond(atom1, atom2, atom1.getColour()));
-            cylinders.push_back(Cylinder((glm::vec3) atom1.coords, (glm::vec3) atom2.coords, m_BondScale, atom1.getColour(), 0.0f, 1.0f));
+            cylinders.push_back(Cylinder((glm::vec3) atom1.coords, (glm::vec3) atom2.coords, m_BondScale, atom1.getColour(), 0.0f, 1.0f, Cylinder::STRUCTURE));
 		}
 	}
 	for (unsigned int i = start; i< start+stride; i++)
@@ -536,7 +557,7 @@ void Structure::regenBonds(unsigned int& index, glm::dvec3& oldCoords)
             if (cov1*m_CovaScale + cov2*m_CovaScale> dist )
 			{
 				m_Bonds.push_back(Bond(atom1, atom2, atom1.getColour()));
-                cylinders.push_back(Cylinder((glm::vec3) atom1.coords, (glm::vec3) atom2.coords, m_BondScale, atom1.getColour(), 0.0f, 1.0f));
+                cylinders.push_back(Cylinder((glm::vec3) atom1.coords, (glm::vec3) atom2.coords, m_BondScale, atom1.getColour(), 0.0f, 1.0f,Cylinder::STRUCTURE));
 			}
 		}
 	}

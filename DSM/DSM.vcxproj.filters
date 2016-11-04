@@ -140,6 +140,12 @@
     <ClCompile Include="src\renderables\cone.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\shader3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\shader2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="src\graphics\glwidget.h">
@@ -249,6 +255,12 @@
     <ClInclude Include="src\renderables\cone.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\graphics\shader3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\shader2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\entities\elements.txt" />
@@ -310,5 +322,7 @@
     <None Include="src\icons\tb_isosurface.xpm" />
     <None Include="src\icons\tools.xpm" />
     <None Include="src\fileio\templates\pw.in" />
+    <None Include="src\graphics\shaders\2D.vert" />
+    <None Include="src\graphics\shaders\2D.frag" />
   </ItemGroup>
 </Project>

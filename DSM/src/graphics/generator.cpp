@@ -4,6 +4,7 @@
 #endif // _DEBUG
 #include <iostream>
 #include "../global.h"
+#include "../renderables/cone.h"
 #include "generator.h"
 
 
@@ -17,7 +18,7 @@ Generator::~Generator()
 }
 
 
-void Generator::init(QOpenGLWidget* widget)
+void Generator::init(GLWidget* widget)
 {
 	initializeOpenGLFunctions();
 	m_glWidget = widget;
@@ -523,3 +524,197 @@ void Generator::deleteStructureBuffers(Structure * structure)
 	m_glWidget->doneCurrent();
 }
 
+void Generator::createCylinder(glm::vec3 v1, glm::vec3 v2, glm::vec3 colour)
+{
+	m_glWidget->makeCurrent();
+
+	Cylinder cylinder(v1, v2, 0.02f, colour, 0.9f, 10.0f, Cylinder::NORMAL);
+	VAO* vao = new VAO();
+	VBO* vertBuf = new VBO(GL_ARRAY_BUFFER);
+	VBO* indBuf = new VBO(GL_ELEMENT_ARRAY_BUFFER);
+	VBO* colBuf = new VBO(GL_ARRAY_BUFFER);
+	VBO* normBuf = new VBO(GL_ARRAY_BUFFER);
+	VBO* matBuf = new VBO(GL_ARRAY_BUFFER);
+	VBO* intBuf = new VBO(GL_ARRAY_BUFFER);
+	VBO* powBuf = new VBO(GL_ARRAY_BUFFER);
+
+	vao->create();
+	vao->bind();
+
+	vertBuf->create();
+	indBuf->create();
+	normBuf->create();
+	colBuf->create();
+	matBuf->create();
+	intBuf->create();
+	powBuf->create();
+
+	vertBuf->bind();
+	vertBuf->allocateAndSubmit(&cylinder.vertices[0][0], cylinder.vertices.size() * sizeof(glm::vec3), GL_STATIC_DRAW);
+	vao->submitVBO(vertBuf, VAO::VERT);
+
+	indBuf->bind();
+	indBuf->allocateAndSubmit(&cylinder.indices[0], cylinder.indices.size() * sizeof(GLuint), GL_STATIC_DRAW);
+	indBuf->unbind();
+
+	colBuf->bind();
+	colBuf->allocateAndSubmit(&cylinder.colour[0], sizeof(glm::vec3), GL_STATIC_DRAW);
+	vao->submitVBO(colBuf, VAO::COL);
+
+	normBuf->bind();
+	normBuf->allocateAndSubmit(&cylinder.normals[0][0], cylinder.normals.size() * sizeof(glm::vec3), GL_STATIC_DRAW);
+	vao->submitVBO(normBuf, VAO::NORM);
+
+	matBuf->bind();
+	matBuf->allocateAndSubmit(&cylinder.mat[0][0], sizeof(glm::mat4), GL_STATIC_DRAW);
+	vao->submitVBO(matBuf, VAO::MAT);
+
+	intBuf->bind();
+	intBuf->allocateAndSubmit(&cylinder.specIntensity, sizeof(GLfloat), GL_STATIC_DRAW);
+	vao->submitVBO(intBuf, VAO::INT);
+
+	powBuf->bind();
+	powBuf->allocateAndSubmit(&cylinder.specPower, sizeof(GLfloat), GL_STATIC_DRAW);
+	vao->submitVBO(powBuf, VAO::POW);
+	powBuf->unbind();
+	vao->unbind();
+	m_glWidget->submit2DVao(vao, indBuf, cylinder.indices.size());
+	m_glWidget->doneCurrent();
+
+
+}
+
+void Generator::createCone(glm::vec3 v1, glm::vec3 v2, glm::vec3 colour)
+{
+	m_glWidget->makeCurrent();
+
+	Cone cone(v1, v2, 0.05f, colour, 0.9f, 10.0f);
+	VAO* vao = new VAO();
+	VBO* vertBuf = new VBO(GL_ARRAY_BUFFER);
+	VBO* indBuf = new VBO(GL_ELEMENT_ARRAY_BUFFER);
+	VBO* colBuf = new VBO(GL_ARRAY_BUFFER);
+	VBO* normBuf = new VBO(GL_ARRAY_BUFFER);
+	VBO* matBuf = new VBO(GL_ARRAY_BUFFER);
+	VBO* intBuf = new VBO(GL_ARRAY_BUFFER);
+	VBO* powBuf = new VBO(GL_ARRAY_BUFFER);
+
+	vao->create();
+	vao->bind();
+
+	vertBuf->create();
+	indBuf->create();
+	normBuf->create();
+	colBuf->create();
+	matBuf->create();
+	intBuf->create();
+	powBuf->create();
+
+	vertBuf->bind();
+	vertBuf->allocateAndSubmit(&cone.vertices[0][0], cone.vertices.size() * sizeof(glm::vec3), GL_STATIC_DRAW);
+	vao->submitVBO(vertBuf, VAO::VERT);
+
+	indBuf->bind();
+	indBuf->allocateAndSubmit(&cone.indices[0], cone.indices.size() * sizeof(GLuint), GL_STATIC_DRAW);
+	indBuf->unbind();
+
+	colBuf->bind();
+	colBuf->allocateAndSubmit(&cone.colour[0], sizeof(glm::vec3), GL_STATIC_DRAW);
+	vao->submitVBO(colBuf, VAO::COL);
+
+	normBuf->bind();
+	normBuf->allocateAndSubmit(&cone.normals[0][0], cone.normals.size() * sizeof(glm::vec3), GL_STATIC_DRAW);
+	vao->submitVBO(normBuf, VAO::NORM);
+
+	matBuf->bind();
+	matBuf->allocateAndSubmit(&cone.mat[0][0], sizeof(glm::mat4), GL_STATIC_DRAW);
+	vao->submitVBO(matBuf, VAO::MAT);
+
+	intBuf->bind();
+	intBuf->allocateAndSubmit(&cone.specIntensity, sizeof(GLfloat), GL_STATIC_DRAW);
+	vao->submitVBO(intBuf, VAO::INT);
+
+	powBuf->bind();
+	powBuf->allocateAndSubmit(&cone.specPower, sizeof(GLfloat), GL_STATIC_DRAW);
+	vao->submitVBO(powBuf, VAO::POW);
+	powBuf->unbind();
+	vao->unbind();
+	m_glWidget->submit2DVao(vao, indBuf, cone.indices.size());
+	m_glWidget->doneCurrent();
+
+}
+
+void Generator::createAndSubmit2DSphere(glm::vec3 center, float radius, glm::vec3 colour)
+{
+	m_glWidget->makeCurrent();
+
+	Sphere sphere(center,radius,colour, 0.9f, 10.0f,100000);
+	VAO* vao = new VAO();
+	VBO* vertBuf = new VBO(GL_ARRAY_BUFFER);
+	VBO* indBuf = new VBO(GL_ELEMENT_ARRAY_BUFFER);
+	VBO* colBuf = new VBO(GL_ARRAY_BUFFER);
+	VBO* normBuf = new VBO(GL_ARRAY_BUFFER);
+	VBO* matBuf = new VBO(GL_ARRAY_BUFFER);
+	VBO* intBuf = new VBO(GL_ARRAY_BUFFER);
+	VBO* powBuf = new VBO(GL_ARRAY_BUFFER);
+
+	vao->create();
+	vao->bind();
+
+	vertBuf->create();
+	indBuf->create();
+	normBuf->create();
+	colBuf->create();
+	matBuf->create();
+	intBuf->create();
+	powBuf->create();
+
+	vertBuf->bind();
+	vertBuf->allocateAndSubmit(&sphere.vertices[0][0], sphere.vertices.size() * sizeof(glm::vec3), GL_STATIC_DRAW);
+	vao->submitVBO(vertBuf, VAO::VERT);
+
+	indBuf->bind();
+	indBuf->allocateAndSubmit(&sphere.indices[0], sphere.indices.size() * sizeof(GLuint), GL_STATIC_DRAW);
+	indBuf->unbind();
+
+	colBuf->bind();
+	colBuf->allocateAndSubmit(&sphere.colour[0], sizeof(glm::vec3), GL_STATIC_DRAW);
+	vao->submitVBO(colBuf, VAO::COL);
+
+	normBuf->bind();
+	normBuf->allocateAndSubmit(&sphere.normals[0][0], sphere.normals.size() * sizeof(glm::vec3), GL_STATIC_DRAW);
+	vao->submitVBO(normBuf, VAO::NORM);
+
+	matBuf->bind();
+	matBuf->allocateAndSubmit(&sphere.mat[0][0], sizeof(glm::mat4), GL_STATIC_DRAW);
+	vao->submitVBO(matBuf, VAO::MAT);
+
+	intBuf->bind();
+	intBuf->allocateAndSubmit(&sphere.specIntensity, sizeof(GLfloat), GL_STATIC_DRAW);
+	vao->submitVBO(intBuf, VAO::INT);
+
+	powBuf->bind();
+	powBuf->allocateAndSubmit(&sphere.specPower, sizeof(GLfloat), GL_STATIC_DRAW);
+	vao->submitVBO(powBuf, VAO::POW);
+	powBuf->unbind();
+	vao->unbind();
+	m_glWidget->submit2DVao(vao, indBuf, sphere.indices.size());
+	m_glWidget->doneCurrent();
+
+}
+
+
+
+void Generator::createAndSubmit2DVector(glm::vec3 v1,glm::vec3 v2, glm::vec3 colour,Direction direction)
+{
+	m_glWidget->makeCurrent();
+	createCylinder(v1, v2, colour);
+	if(direction == X)
+		createCone(v2, v2+glm::vec3(0.05f,0.0f,0.0f), colour);
+	else if (direction ==Y)
+		createCone(v2, v2 + glm::vec3(0.0f, 0.05f, 0.0f), colour);
+	else
+		createCone(v2, v2 + glm::vec3(0.0f, 0.0f, 0.05f), colour);
+	m_glWidget->doneCurrent();
+	
+	m_glWidget->update();
+}

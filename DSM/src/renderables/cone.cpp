@@ -1,14 +1,14 @@
 
 #include <vector>
 #include <cmath>
-
-#include "../global.h"
 #include "cone.h"
 #include "../fileio/objreader.h"
 #include "../utils/maths.h"
 
+
+
 Cone::Cone(glm::vec3 v1, glm::vec3 v2, float radius, glm::vec3 colour, float specIntensity, float specPower)
-	:Renderable3D(BaseCylinder::instance()->getVertices(), BaseCylinder::instance()->getNormals(), BaseCylinder::instance()->getIndices(), colour, specIntensity, specPower), v1(v1), v2(v2), radius(radius)
+	:Renderable3D(BaseCone::instance()->getVertices(), BaseCone::instance()->getNormals(), BaseCone::instance()->getIndices(), colour, specIntensity, specPower), v1(v1), v2(v2), radius(radius)
 
 {
 	genMat();
@@ -44,9 +44,36 @@ void Cone::genMat()
 void Cone::initInfo()
 {
 	objReader reader;
-	normals.reserve(32);
-	indices.reserve(183);
-	vertices.reserve(32);
-	reader.loadOBJ("src/renderables/cone.obj", vertices, indices, normals);
+	normals.reserve(128);
+	indices.reserve(186);
+	vertices.reserve(128);
+	reader.loadOBJ1("src/renderables/cone.obj", vertices, indices, normals);
 
+}
+
+
+BaseCone::BaseCone() :Cone()
+{
+
+}
+
+BaseCone::~BaseCone()
+{
+	if (cone_instance)
+	{
+		delete cone_instance;
+	}
+}
+
+std::vector<glm::vec3> BaseCone::getVertices()
+{
+	return vertices;
+}
+std::vector<glm::vec3> BaseCone::getNormals()
+{
+	return normals;
+}
+std::vector<GLuint> BaseCone::getIndices()
+{
+	return indices;
 }
