@@ -58,10 +58,6 @@ void MainWindow::openStructure()
         ui.openGLWidget->setFocus();
         ui.treeWidget->addStructure(m_Structures[m_SelectedStructure]);
         ui.openGLWidget->addStructure(m_Structures[m_SelectedStructure]);
-		Generator::instance()->createAndSubmit2DSphere(glm::vec3(-0.9f, 0.0f, -1.0f), 0.02f, glm::vec3(1.0f));
-		Generator::instance()->createAndSubmit2DVector(glm::vec3(-0.9f,0.0f,-1.0f),glm::vec3(-0.7f,0.0f,-1.0f),glm::vec3(0.0f,1.0f,0.0f),Generator::X);
-		Generator::instance()->createAndSubmit2DVector(glm::vec3(-0.9f, 0.0f, -1.0f), glm::vec3(-0.9f, 0.5f, -1.0f), glm::vec3(1.0f,0.0f,0.0f), Generator::Y);
-		Generator::instance()->createAndSubmit2DVector(glm::vec3(-0.9f, 0.0f, -1.0f), glm::vec3(-0.9f, 0.0f, -1.2f), glm::vec3(0.0f,0.0f,1.0f), Generator::Z);
 
         displayStructure();
     }

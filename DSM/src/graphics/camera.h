@@ -15,6 +15,7 @@ public:
 	glm::vec3 strafeDirection;
 	glm::vec3 structureOrigin;
 	glm::mat4 globalTransMat;
+	glm::mat4 transMat2D;
 	glm::mat4 inverseGlobalMat;
 	float MOVEMENT_SPEED = 1.0f;
 

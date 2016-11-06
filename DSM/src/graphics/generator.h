@@ -25,8 +25,11 @@ public:
 	void deleteStructureBuffers(Structure* structure);
     void deleteCylinderBufs(Structure *structure);
 
-	void createCylinder(glm::vec3 v1, glm::vec3 v2, glm::vec3 colour);
-	void createCone(glm::vec3 v1, glm::vec3 v2, glm::vec3 colour);
+	void setupStructureCoordinateSystem(Structure* structure);
+
+	void create2DStructureCylinder(glm::vec3 v1, glm::vec3 v2, glm::vec3 colour, VAO* vao, std::vector<VBO*> vbos);
+	void create2DStructureCone(glm::vec3 v1, glm::vec3 v2, glm::vec3 colour, VAO* vao, std::vector<VBO*> vbos);
+	void create2DStructureSphere(glm::vec3 center, float radius, glm::vec3 colour, VAO* vao, std::vector<VBO*> vbos);
 	void createAndSubmit2DSphere(glm::vec3 center, float radius, glm::vec3 colour);
 	void createAndSubmit2DVector(glm::vec3 v1, glm::vec3 v2, glm::vec3 colour,Direction direction);
 private:

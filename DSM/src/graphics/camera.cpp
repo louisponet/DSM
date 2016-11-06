@@ -10,6 +10,7 @@ Camera::Camera()
 	up = glm::vec3(0.0f, 0.0f, 1.0f);
 	structureOrigin = glm::vec3(0.0f, 0.0f, 0.0f);
 	globalTransMat = glm::mat4();
+	transMat2D = glm::mat4();
 	inverseGlobalMat = glm::mat4();
 
 }
@@ -42,6 +43,7 @@ void Camera::mouseUpdate(const float& dx, const float& dy)
 void Camera::rotateWorld(const float& dx, const float& dy)
 {
 	globalTransMat = maths::translateCM(maths::rotateCM(maths::rotateCM(maths::translateCM(globalTransMat, -structureOrigin), dy / 80.0f, strafeDirection), dx / 80.0f, up), +structureOrigin);
+	transMat2D = maths::translateCM(maths::rotateCM(maths::rotateCM(maths::translateCM(transMat2D, -glm::vec3(-1.2f, -0.8f, 0.0f)), -dy / 80.0f, glm::vec3(-1.0f, 0.0f, 0.0f)), dx / 80.0f, glm::vec3(0.0f, 1.0f, 0.0f)), glm::vec3(-1.2f, -0.8f, 0.0f));
 }
 
 void Camera::moveForward()

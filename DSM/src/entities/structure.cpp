@@ -19,36 +19,65 @@ Structure::~Structure()
 {
 	for (int i = 0; i < 3; i++)
 	{
-		vaos[i]->bind();
-		vaos[i]->del();
-		vaos[i]->unbind();
-		delete vaos[i];
-		vertBufs[i]->bind();
-		vertBufs[i]->del();
-		delete vertBufs[i];
-		colBufs[i]->bind();
-		colBufs[i]->del();
-		delete colBufs[i];
-		normBufs[i]->bind();
-		normBufs[i]->del();
-		delete normBufs[i];
-		matBufs[i]->bind();
-		matBufs[i]->del();
-		delete matBufs[i];
-		intBufs[i]->bind();
-		intBufs[i]->del();
-		delete intBufs[i];
-		powBufs[i]->bind();
-		powBufs[i]->del();
-		delete powBufs[i];
-		indBufs[i]->bind();
-		indBufs[i]->del();
-		delete indBufs[i];
+		vaos3D[i]->bind();
+		vaos3D[i]->del();
+		vaos3D[i]->unbind();
+		delete vaos3D[i];
+		vertBufs3D[i]->bind();
+		vertBufs3D[i]->del();
+		delete vertBufs3D[i];
+		colBufs3D[i]->bind();
+		colBufs3D[i]->del();
+		delete colBufs3D[i];
+		normBufs3D[i]->bind();
+		normBufs3D[i]->del();
+		delete normBufs3D[i];
+		matBufs3D[i]->bind();
+		matBufs3D[i]->del();
+		delete matBufs3D[i];
+		intBufs3D[i]->bind();
+		intBufs3D[i]->del();
+		delete intBufs3D[i];
+		powBufs3D[i]->bind();
+		powBufs3D[i]->del();
+		delete powBufs3D[i];
+		indBufs3D[i]->bind();
+		indBufs3D[i]->del();
+		delete indBufs3D[i];
 	}
-	numberBufs[0]->bind();
-	numberBufs[0]->del();
-	numberBufs[0]->unbind();
-	delete numberBufs[0];
+	numberBufs3D[0]->bind();
+	numberBufs3D[0]->del();
+	numberBufs3D[0]->unbind();
+	delete numberBufs3D[0];
+
+	for (int i = 0; i < 7; i++)
+	{
+		vaos2D[i]->bind();
+		vaos2D[i]->del();
+		vaos2D[i]->unbind();
+		delete vaos2D[i];
+		vertBufs2D[i]->bind();
+		vertBufs2D[i]->del();
+		delete vertBufs2D[i];
+		colBufs2D[i]->bind();
+		colBufs2D[i]->del();
+		delete colBufs2D[i];
+		normBufs2D[i]->bind();
+		normBufs2D[i]->del();
+		delete normBufs2D[i];
+		matBufs2D[i]->bind();
+		matBufs2D[i]->del();
+		delete matBufs2D[i];
+		intBufs2D[i]->bind();
+		intBufs2D[i]->del();
+		delete intBufs2D[i];
+		powBufs2D[i]->bind();
+		powBufs2D[i]->del();
+		delete powBufs2D[i];
+		indBufs2D[i]->bind();
+		indBufs2D[i]->del();
+		delete indBufs2D[i];
+	}
 }
 
 //------------------All external modifier commands----------------------//
@@ -62,6 +91,7 @@ void Structure::populateAtoms(std::vector<Particle>& inAtoms)
 	genBonds();
 	Generator::instance()->initStructureBufs(this);
 	Generator::instance()->genVaos(this);
+	Generator::instance()->setupStructureCoordinateSystem(this);
 }
 
 void Structure::updateImageMats()
@@ -167,6 +197,8 @@ void Structure::create()
 	calculateOrigin();
 	Generator::instance()->initStructureBufs(this);
 	Generator::instance()->genVaos(this);
+	Generator::instance()->setupStructureCoordinateSystem(this);
+
 }
 
 
@@ -655,17 +687,17 @@ void Structure::setBondScale(float BondScale)
 
 //-----------------Reset commands---------------------------------//
 
-void Structure::resetBufs()
+void Structure::resetBufs3D()
 {
 	Generator::instance()->deleteStructureBuffers(this);
-	vaos.clear();
-	colBufs.clear();
-	vertBufs.clear();
-	indBufs.clear();
-	matBufs.clear();
-	numberBufs.clear();
-	intBufs.clear();
-	powBufs.clear();
-	normBufs.clear();
+	vaos3D.clear();
+	colBufs3D.clear();
+	vertBufs3D.clear();
+	matBufs3D.clear();
+	numberBufs3D.clear();
+	intBufs3D.clear();
+	powBufs3D.clear();
+	normBufs3D.clear();
+	indBufs3D.clear();
 }
 

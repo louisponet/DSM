@@ -109,4 +109,40 @@ struct maths {
 		return lookAtMat*baseMat;
 
  	}
+
+	static glm::mat4 swapYZ()
+	{
+		glm::mat4 swapMat(1.0f);
+		swapMat[1][2] = -1.0f;
+		swapMat[1][1] = 0.0f;
+		
+		swapMat[2][2] = 0.0f;
+		swapMat[2][1] = 1.0f;
+		
+		return swapMat;
+	}
+
+	static glm::dvec3 mirrorAgainstXd(glm::dvec3& v)
+	{
+		glm::dvec3 outVec = v;
+		outVec[2] = -v[2];
+		return outVec;
+	}
+
+	static glm::dvec3 swapYZd(glm::dvec3& v)
+	{
+		glm::dvec3 outVec = v;
+		outVec[2] = v[1];
+		outVec[1] = v[2];
+		return outVec;
+	}
+
+	static glm::dvec3 convertZupToZback(glm::dvec3& v)
+	{
+		glm::dvec3 outVec = v;
+		outVec[2] = v[1];
+		outVec[1] = v[2];
+		outVec[2] = -outVec[2];
+		return outVec;
+	}
 };

@@ -29,9 +29,14 @@ public:
 	std::vector<Sphere> spheres;
 	std::vector<Cube> cubes;
 	std::vector<glm::mat4> imMats;
-	std::vector<VBO*> vertBufs, indBufs, normBufs, colBufs, matBufs, intBufs, powBufs, numberBufs;
-	std::vector<VAO*> vaos;
-	std::vector<unsigned int> numVertsList, numObjsList;
+	std::vector<VBO*> vertBufs3D, normBufs3D, colBufs3D, matBufs3D, intBufs3D, powBufs3D, numberBufs3D;
+	std::vector<VBO*> vertBufs2D, normBufs2D, colBufs2D, matBufs2D, intBufs2D, powBufs2D, numberBufs2D;
+	std::vector<VBO*> indBufs3D,indBufs2D;
+	std::vector<VAO*> vaos3D;
+	std::vector<VAO*> vaos2D;
+	std::vector<unsigned int> numVertsList3D, numObjsList3D;
+	std::vector<unsigned int> numVertsList2D, numObjsList2D;
+
 	Camera camera;
 	unsigned int v1PosImCount = 0;
 	unsigned int v1NegImCount = 0;
@@ -71,7 +76,7 @@ public:
 	std::vector<std::string> getAtomSymbols();
 	std::vector<float> getAtomRadii();
 	void updateImageMats();
-	void resetBufs();
+	void resetBufs3D();
 	void updateAtomCoords(uint& index, glm::dvec3 addCoords);
 	void setAtomCoords(uint& index1,glm::dvec3 coords);
 	void addAtom(Particle atom);

@@ -41,16 +41,18 @@ void GLWidget::initializeGL()
 	m_3DShader.load(this);
 	m_2DShader.load(this);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+#ifdef _DEBUG
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
 	{
-		std::cout << "OpenGL Error: " << error << std::endl;
+		std::cout << "OpenGL Error trying to render2D: " << error << std::endl;
 	}
+#endif
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_CULL_FACE);
 	m_ProjectionMatrix = glm::perspective(1.0472f/2.0f, (float)(this->width() / this->height()), 0.1f, 200.0f);
-	m_OrthogonalMatrix = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f);
+	m_OrthogonalMatrix = glm::ortho(-1.0f*width()/height(), 1.0f*width() / height(), -1.0f, 1.0f);
 	m_Light.ambIntensity = 0.2f;
 	m_Light.diffIntensity = 0.8f;
 	m_Light.center = glm::vec3(0.0f, 0.0f, 100.0f);
@@ -263,10 +265,14 @@ void GLWidget::selectStructure(int index)
 		return;
 	}
 	m_SelectedStructure = index;
-	m_3DVaos = &(m_Structures[index]->vaos);
-	m_3DIndBufs = &(m_Structures[index]->indBufs);
-	m_3DNumObjectsList =&( m_Structures[index]->numObjsList);
-	m_3DNumVerticesList= &(m_Structures[index]->numVertsList);
+	m_3DVaos = &(m_Structures[index]->vaos3D);
+	m_3DIndBufs = &(m_Structures[index]->indBufs3D);
+	m_3DNumObjectsList =&( m_Structures[index]->numObjsList3D);
+	m_3DNumVerticesList= &(m_Structures[index]->numVertsList3D);
+	m_2DVaos = &(m_Structures[index]->vaos2D);
+	m_2DIndBufs = &(m_Structures[index]->indBufs2D);
+	m_2DNumObjectsList = &(m_Structures[index]->numObjsList2D);
+	m_2DNumVerticesList = &(m_Structures[index]->numVertsList2D);
 	m_Camera = &m_Structures[index]->camera;
 
 	update();
@@ -274,30 +280,33 @@ void GLWidget::selectStructure(int index)
 
 void GLWidget::submit2DVao(VAO* vao,VBO* indBuf,GLuint numIndices)
 {
-	m_2DVaos.push_back(vao);
-	m_2DIndBufs.push_back(indBuf);
-	m_2DNumVerticesList.push_back(numIndices);
-	m_2DNumObjectsList.push_back(1);
+	(*m_2DVaos).push_back(vao);
+	(*m_2DIndBufs).push_back(indBuf);
+	(*m_2DNumVerticesList).push_back(numIndices);
+	(*m_2DNumObjectsList).push_back(1);
 
 }
 
 void GLWidget::render2D()
 {
+
 	m_2DShader.enable();
-	glm::mat4 wtvMat = m_Camera->getWTVMat();
-	m_2DShader.setUniform4mat("transformMatrix", m_OrthogonalMatrix);
-	for (int i = 0; i < m_2DVaos.size(); i++)
+	m_2DShader.setUniform4mat("transformMatrix", m_OrthogonalMatrix*m_Camera->transMat2D);
+	for (int i = 0; i < (*m_2DVaos).size(); i++)
 	{
-		m_2DVaos[i]->bind();
-		m_2DIndBufs[i]->bind();
-		glDrawElementsInstanced(GL_TRIANGLES, m_2DNumVerticesList[i], GL_UNSIGNED_INT, 0, m_2DNumObjectsList[i]);
+		(*m_2DVaos)[i]->bind();
+		(*m_2DIndBufs)[i]->bind();
+		glDrawElementsInstanced(GL_TRIANGLES, (*m_2DNumVerticesList)[i], GL_UNSIGNED_INT, 0, (*m_2DNumObjectsList)[i]);
 	}
+#ifdef _DEBUG
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR)
 	{
 		std::cout << "OpenGL Error trying to render2D: " << error << std::endl;
 	}
+#endif
 	m_2DShader.disable();
+
 }
 
 void GLWidget::render3D()

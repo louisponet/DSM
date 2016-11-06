@@ -1,5 +1,7 @@
 #pragma once
-
+#ifndef __APPLE__
+#include "../utils/timer.h"
+#endif
 #include <QtWidgets/QOpenGLWidget>
 #include <vector>
 #include <QtGui/QMouseEvent>
@@ -7,6 +9,7 @@
 #include "shader3D.h"
 #include "shader2D.h"
 #include "../entities/structure.h"
+
 #include "camera.h"
 
 
@@ -18,12 +21,11 @@ class GLWidget : public QOpenGLWidget, public GL
 
 private:
 	std::vector<VAO*>* m_3DVaos;
-	std::vector<VAO*> m_2DVaos;
+	std::vector<VAO*>* m_2DVaos;
 	std::vector<VBO*>* m_3DIndBufs;
-	std::vector<VBO*> m_2DIndBufs;
+	std::vector<VBO*>* m_2DIndBufs;
 	std::vector<GLuint>* m_3DNumVerticesList, *m_3DNumObjectsList;
-	//temporary not pointers
-	std::vector<GLuint> m_2DNumVerticesList ,m_2DNumObjectsList;
+	std::vector<GLuint>* m_2DNumVerticesList ,*m_2DNumObjectsList;
 	std::vector<Structure*> m_Structures;
 	GLuint m_Vao,m_IndBuf, m_NumVertices, m_NumObjects;
 	QPoint m_LastPos;
@@ -35,7 +37,7 @@ private:
 	glm::mat4 m_ProjectionMatrix;
 	glm::mat4 m_OrthogonalMatrix;
 	bool m_Testing = false;
-
+	Timer m_Timer;
 	int m_SelectedStructure = -1;
 public:
 
