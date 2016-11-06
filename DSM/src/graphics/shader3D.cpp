@@ -37,11 +37,14 @@ void Shader3D::setLightProperties(const Light& light) {
 
 }
 
-void Shader3D::disableDiffuseLighting() {
+void Shader3D::setDiffuseLighting(float value) {
 
-	glUniform1f(m_DiffIntensityLoc, 0.0f);
-	glUniform1f(m_AmbIntensityLoc, 0.4f);
+	glUniform1f(m_DiffIntensityLoc, value);
+}
 
+void Shader3D::setAmbientLighting(float value) {
+
+	glUniform1f(m_AmbIntensityLoc, value);
 }
 
 void Shader3D::enableDiffuseLighting() {

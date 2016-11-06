@@ -12,7 +12,8 @@ public:
 	void setLightProperties(const Light& light);
 	void setSelectedIndex(const unsigned int& index);
 
-	void disableDiffuseLighting();
+	void setDiffuseLighting(float value);
+	void setAmbientLighting(float value);
 	void enableDiffuseLighting();
 	void initLocations();
 private:

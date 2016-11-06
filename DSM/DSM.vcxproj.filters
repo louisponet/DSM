@@ -266,7 +266,6 @@
     <Text Include="src\entities\elements.txt" />
     <Text Include="SnCl.txt" />
     <Text Include="src\renderables\cube.txt" />
-    <Text Include="src\renderables\cylinder.txt" />
     <Text Include="Text.txt" />
   </ItemGroup>
   <ItemGroup>

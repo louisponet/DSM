@@ -50,7 +50,7 @@ void Cylinder::initInfo()
 	normals.reserve(64);
 	indices.reserve(372);
 	vertices.reserve(64);
-    reader.loadOBJ1("src/renderables/cylinder.txt", vertices, indices, normals);
+    reader.loadOBJ1("src/renderables/cylinder.obj", vertices, indices, normals);
  
 }
 

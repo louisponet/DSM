@@ -63,6 +63,8 @@ void GLWidget::initializeGL()
 	m_3DShader.setSelectedIndex(selectedIndex);
  	m_3DShader.setLightProperties(m_Light);
 	m_3DShader.disable();
+	m_2DShader.enable();
+	m_2DShader.setLightProperties(m_Light);
 
 
 }
@@ -327,7 +329,7 @@ void GLWidget::render3D()
 			}
 			if (i == 1 | i == 2)
 			{
-				m_3DShader.disableDiffuseLighting();
+				m_3DShader.setDiffuseLighting(0.4f);
 				m_3DShader.setSelectedIndex(100000);
 
 			}

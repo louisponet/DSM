@@ -1,5 +1,7 @@
 #define LINE_WIDTH 0.02f
 #define LINE_COLOUR glm::vec3(10.0f,10.0f,10.0f)
+#define CYLINDER_INT 0.0f
+#define CYLINDER_POW 1.0f
 #include <glm/gtc/matrix_access.hpp>
 #include <glm/gtx/transform.hpp>
 #include "structure.h"
@@ -511,7 +513,7 @@ void Structure::genBonds()
 	for (unsigned int i = 0; i < m_Bonds.size(); i++)
 	{
 		Particle& atom1=m_Bonds[i].atom1, &atom2=m_Bonds[i].atom2;
-        cylinders.push_back(Cylinder((glm::vec3)atom1.coords, (glm::vec3) atom2.coords, m_BondScale, atom1.getColour(), 0.0f, 1.0f, Cylinder::STRUCTURE));
+        cylinders.push_back(Cylinder((glm::vec3)atom1.coords, (glm::vec3) atom2.coords, m_BondScale, atom1.getColour(), CYLINDER_INT, 1.0f, Cylinder::STRUCTURE));
 	}
 
 
@@ -558,8 +560,8 @@ void Structure::regenBonds(unsigned int& index, glm::dvec3& oldCoords)
 			m_Bonds.push_back(Bond(atom1, atom2, atom1.getColour()));
 			m_Bonds.push_back(Bond(atom2, atom1, atom2.getColour()));
 
-            cylinders.push_back(Cylinder((glm::vec3) atom1.coords,(glm::vec3) atom2.coords, m_BondScale, atom1.getColour(), 0.0f, 1.0f, Cylinder::STRUCTURE));
-            cylinders.push_back(Cylinder((glm::vec3) atom2.coords,(glm::vec3) atom1.coords, m_BondScale, atom2.getColour(), 0.0f, 1.0f, Cylinder::STRUCTURE));
+            cylinders.push_back(Cylinder((glm::vec3) atom1.coords,(glm::vec3) atom2.coords, m_BondScale, atom1.getColour(), CYLINDER_INT, 1.0f, Cylinder::STRUCTURE));
+            cylinders.push_back(Cylinder((glm::vec3) atom2.coords,(glm::vec3) atom1.coords, m_BondScale, atom2.getColour(), CYLINDER_INT, 1.0f, Cylinder::STRUCTURE));
 
 		}
 	}
@@ -572,7 +574,7 @@ void Structure::regenBonds(unsigned int& index, glm::dvec3& oldCoords)
         if (cov1*m_CovaScale + cov2*m_CovaScale> dist )
         {
 			m_Bonds.push_back(Bond(atom1, atom2, atom1.getColour()));
-            cylinders.push_back(Cylinder((glm::vec3) atom1.coords, (glm::vec3) atom2.coords, m_BondScale, atom1.getColour(), 0.0f, 1.0f, Cylinder::STRUCTURE));
+            cylinders.push_back(Cylinder((glm::vec3) atom1.coords, (glm::vec3) atom2.coords, m_BondScale, atom1.getColour(), CYLINDER_INT, 1.0f, Cylinder::STRUCTURE));
 		}
 	}
 	for (unsigned int i = start; i< start+stride; i++)
@@ -589,7 +591,7 @@ void Structure::regenBonds(unsigned int& index, glm::dvec3& oldCoords)
             if (cov1*m_CovaScale + cov2*m_CovaScale> dist )
 			{
 				m_Bonds.push_back(Bond(atom1, atom2, atom1.getColour()));
-                cylinders.push_back(Cylinder((glm::vec3) atom1.coords, (glm::vec3) atom2.coords, m_BondScale, atom1.getColour(), 0.0f, 1.0f,Cylinder::STRUCTURE));
+                cylinders.push_back(Cylinder((glm::vec3) atom1.coords, (glm::vec3) atom2.coords, m_BondScale, atom1.getColour(), CYLINDER_INT, 1.0f,Cylinder::STRUCTURE));
 			}
 		}
 	}
