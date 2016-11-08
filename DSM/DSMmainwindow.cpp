@@ -291,10 +291,19 @@ void MainWindow::setScales()
     ui.lineEdit->blockSignals(true);
     ui.lineEdit_2->blockSignals(true);
     ui.lineEdit_3->blockSignals(true);
-    ui.lineEdit->setText(QString::number(m_Structures[m_SelectedStructure]->getAtomScale()));
-    ui.lineEdit_2->setText(QString::number(m_Structures[m_SelectedStructure]->getBondScale()));
-    ui.lineEdit_3->setText(QString::number(m_Structures[m_SelectedStructure]->getCovaScale()));
-    ui.lineEdit->blockSignals(false);
+	if (m_SelectedStructure != -1)
+	{
+		ui.lineEdit->setText(QString::number(m_Structures[m_SelectedStructure]->getAtomScale()));
+		ui.lineEdit_2->setText(QString::number(m_Structures[m_SelectedStructure]->getBondScale()));
+		ui.lineEdit_3->setText(QString::number(m_Structures[m_SelectedStructure]->getCovaScale()));
+	}
+	else
+	{
+		ui.lineEdit->setText("/");
+		ui.lineEdit_2->setText("/");
+		ui.lineEdit_3->setText("/");
+	}
+	ui.lineEdit->blockSignals(false);
     ui.lineEdit_2->blockSignals(false);
     ui.lineEdit_3->blockSignals(false);
 

@@ -156,7 +156,7 @@ void CreateStructureWindow::createButtonClicked()
 	else
 	{
 		tmp_Structure->resetBufs3D();
-		tmp_Structure->create();
+		tmp_Structure->update();
 	}
 	emit structureCreated(tmp_Structure);
 }

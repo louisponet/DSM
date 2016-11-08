@@ -1,10 +1,15 @@
-﻿  structure.cpp
-  camera.cpp
+﻿  DSMmainwindow.cpp
+  moc_DSMmainwindow.cpp
+  moc_glwidget.cpp
+  moc_treewidget.cpp
+  moc_createstructurewindow.cpp
+  main.cpp
+  structure.cpp
+  qeIO.cpp
   generator.cpp
-  Cube.cpp
-  cone.cpp
-  cylinder.cpp
-  sphere.cpp
+  glwidget.cpp
+  treewidget.cpp
+  createstructurewindow.cpp
   Generating Code...
   DSM.vcxproj -> C:\Users\ponet\Source\Repos\DSM\DSM\x64\Debug\DSM.exe
   DSM.vcxproj -> C:\Users\ponet\Source\Repos\DSM\DSM\x64\Debug\DSM.pdb (Full PDB)

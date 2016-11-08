@@ -203,7 +203,16 @@ void Structure::create()
 
 }
 
-
+void Structure::update()
+{
+	genFullCell();
+	genSurroundings();
+	genBonds();
+	genSpheres();
+	calculateOrigin();
+	Generator::instance()->initStructureBufs(this);
+	Generator::instance()->genVaos(this);
+}
 
 
 void Structure::setCell(glm::dmat3& cell)

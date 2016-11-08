@@ -20,6 +20,11 @@ class GLWidget : public QOpenGLWidget, public GL
 	Q_OBJECT
 
 private:
+	VAO* m_HUDvao;
+	std::vector<VBO*>m_HUDvbos;
+	std::vector<glm::vec3>m_HUDverts;
+	std::vector<glm::vec3>m_HUDcolours;
+	GLuint m_HUDVertCount=0;
 	std::vector<VAO*>* m_3DVaos;
 	std::vector<VAO*>* m_2DVaos;
 	std::vector<VBO*>* m_3DIndBufs;
@@ -31,6 +36,7 @@ private:
 	QPoint m_LastPos;
 	Shader3D m_3DShader;
 	Shader2D m_2DShader;
+	Shader2D m_HUDShader;
 	Camera* m_Camera = NULL;
 
 	Light m_Light;
@@ -54,6 +60,12 @@ private:
 	void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;
 	void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 	glm::vec4 calculateMouseRay(float x, float y);
+	void initHUD();
+
+	void render3D();
+	void renderHUD();
+	void render2D();
+	
 public:
 	explicit GLWidget(QWidget *parent = Q_NULLPTR);
 	~GLWidget();
@@ -64,8 +76,6 @@ public:
 	void removeStructure(int index);
 	void selectStructure(int index);
 	void submit2DVao(VAO* vao,VBO* indBuf, GLuint numIndices);
-	void render3D();
-	void render2D();
 signals:
 	void mouseClicked(glm::vec4 mouseRay, glm::vec3 cameraPos, glm::mat4 globalTransMat);
 	void atomMoved(glm::vec3 direction);

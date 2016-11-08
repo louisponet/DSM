@@ -27,6 +27,7 @@ public:
 
 	void setupStructureCoordinateSystem(Structure* structure);
 
+	void createHUDRectangle(glm::vec3 v1,glm::vec3 v2, glm::vec3 colour, std::vector<glm::vec3>* verts,std::vector<glm::vec3>* colours);
 	void create2DStructureCylinder(glm::vec3 v1, glm::vec3 v2, glm::vec3 colour, VAO* vao, std::vector<VBO*> vbos);
 	void create2DStructureCone(glm::vec3 v1, glm::vec3 v2, glm::vec3 colour, VAO* vao, std::vector<VBO*> vbos);
 	void create2DStructureSphere(glm::vec3 center, float radius, glm::vec3 colour, VAO* vao, std::vector<VBO*> vbos);

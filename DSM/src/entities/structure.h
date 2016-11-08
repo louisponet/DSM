@@ -83,6 +83,7 @@ public:
 	void removeAtom(int index);
 
 	void create();
+	void update();
 
     float getCovaScale() const;
     void setCovaScale(float CovaScale);

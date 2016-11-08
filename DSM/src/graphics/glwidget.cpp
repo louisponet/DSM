@@ -9,7 +9,8 @@
 
 GLWidget::GLWidget(QWidget *parent) :QOpenGLWidget(parent),
 m_3DShader("src/graphics/shaders/main.vert","src/graphics/shaders/main.frag"),
-m_2DShader("src/graphics/shaders/2D.vert","src/graphics/shaders/2D.frag")
+m_2DShader("src/graphics/shaders/2D.vert","src/graphics/shaders/2D.frag"),
+m_HUDShader("src/graphics/shaders/HUD.vert", "src/graphics/shaders/HUD.frag")
 {
 
     QSurfaceFormat format;
@@ -27,7 +28,7 @@ m_2DShader("src/graphics/shaders/2D.vert","src/graphics/shaders/2D.frag")
 
 GLWidget::~GLWidget()
 {
-
+	delete m_HUDvao;
 }
 
 void GLWidget::initializeGL()
@@ -40,6 +41,7 @@ void GLWidget::initializeGL()
 	std::cout << version << std::endl;
 	m_3DShader.load(this);
 	m_2DShader.load(this);
+	m_HUDShader.load(this);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 #ifdef _DEBUG
 	GLenum error = glGetError();
@@ -65,6 +67,44 @@ void GLWidget::initializeGL()
 	m_3DShader.disable();
 	m_2DShader.enable();
 	m_2DShader.setLightProperties(m_Light);
+	m_2DShader.disable();
+
+
+	initHUD();
+
+
+}
+
+void GLWidget::initHUD()
+{
+	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec3> colours;
+	m_HUDvao = new VAO();
+	//delete these still in a way 
+	VBO* vertVBO = new VBO(GL_ARRAY_BUFFER);
+	VBO* colVBO  = new VBO(GL_ARRAY_BUFFER);
+
+	Generator::instance()->createHUDRectangle(glm::vec3(-1.17f, -0.7f, -0.9f), glm::vec3(-1.17f, -1.0f, -0.9f), glm::vec3(0.1f), &vertices, &colours);
+	m_HUDVertCount += 6;
+	//Generator::instance()->createHUDRectangle(glm::vec3(-1.17f, -0.7f, -0.89f), glm::vec3(-1.17f, -0.1f, -0.89f), glm::vec3(1.0f), &vertices,&colours);
+	m_HUDVertCount += 6;
+
+	m_HUDvao->create();
+	m_HUDvao->bind();
+	
+	vertVBO->create();
+	colVBO->create();
+
+	vertVBO->bind();
+	vertVBO->allocateAndSubmit(&vertices[0][0], vertices.size() * sizeof(glm::vec3), GL_STATIC_DRAW);
+	m_HUDvao->submitVBO(vertVBO, VAO::VERT);
+
+	colVBO->bind();
+	colVBO->allocateAndSubmit(&colours[0][0],colours.size() *sizeof(glm::vec3), GL_STATIC_DRAW);
+	m_HUDvao->submitVBO(colVBO, VAO::COL);
+
+	colVBO->unbind();
+	m_HUDvao->unbind();
 
 
 }
@@ -79,6 +119,7 @@ void GLWidget::paintGL()
 	{
 		
 		render3D();
+		renderHUD();
 		render2D();	
 		
 	}
@@ -289,9 +330,18 @@ void GLWidget::submit2DVao(VAO* vao,VBO* indBuf,GLuint numIndices)
 
 }
 
+void GLWidget::renderHUD()
+{
+	m_HUDShader.enable();
+	m_HUDShader.setUniform4mat("transformMatrix", m_OrthogonalMatrix);
+	m_HUDvao->bind();
+	glDrawArrays(GL_TRIANGLES, 0, m_HUDVertCount);
+	m_HUDShader.disable();
+}
+
 void GLWidget::render2D()
 {
-
+	
 	m_2DShader.enable();
 	m_2DShader.setUniform4mat("transformMatrix", m_OrthogonalMatrix*m_Camera->transMat2D);
 	for (int i = 0; i < (*m_2DVaos).size(); i++)

@@ -423,6 +423,8 @@
     <None Include="src\fileio\templates\pw.in" />
     <None Include="src\graphics\shaders\2D.frag" />
     <None Include="src\graphics\shaders\2D.vert" />
+    <None Include="src\graphics\shaders\HUD.frag" />
+    <None Include="src\graphics\shaders\HUD.vert" />
     <None Include="src\graphics\shaders\main.frag" />
     <None Include="src\graphics\shaders\main.vert" />
     <None Include="src\graphics\shaders\test.frag" />

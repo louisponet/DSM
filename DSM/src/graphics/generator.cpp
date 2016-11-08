@@ -1,4 +1,4 @@
-#define COORD_SYSTEM_ORIGIN glm::dvec3(-1.2,-0.8,0.0)
+#define COORD_SYSTEM_ORIGIN glm::dvec3(-1.33,-0.85,0.0)
 #ifdef _DEBUG
 #include "../utils/timer.h"
 #endif // _DEBUG
@@ -533,6 +533,25 @@ void Generator::deleteStructureBuffers(Structure * structure)
 	}
 	structure->numberBufs3D[0]->del();
 	m_glWidget->doneCurrent();
+}
+
+void Generator::createHUDRectangle(glm::vec3 v1, glm::vec3 v2, glm::vec3 colour, std::vector<glm::vec3>* verts, std::vector<glm::vec3>* colours)
+{
+
+	verts->push_back(v1);
+	verts->push_back(v1 + glm::vec3(v2.x, 0.0f, 0.0f));
+	verts->push_back(v1 + glm::vec3(0.0f,v2.y, 0.0f));
+	verts->push_back(v1 + glm::vec3(0.0f, v2.y, 0.0f));
+	verts->push_back(v2);
+	verts->push_back(v1 + glm::vec3(v2.x, 0.0f, 0.0f));
+
+	colours->push_back(colour);
+	colours->push_back(colour);
+	colours->push_back(colour);
+	colours->push_back(colour);
+	colours->push_back(colour);
+	colours->push_back(colour);
+
 }
 
 void Generator::create2DStructureCylinder(glm::vec3 v1, glm::vec3 v2, glm::vec3 colour, VAO* vao, std::vector<VBO*> vbos)
