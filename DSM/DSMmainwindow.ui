@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1657</width>
+    <width>1765</width>
     <height>1041</height>
    </rect>
   </property>
@@ -18,32 +18,14 @@
     <property name="verticalSpacing">
      <number>0</number>
     </property>
-    <item row="0" column="1" rowspan="3">
+    <item row="0" column="1" rowspan="4">
      <widget class="GLWidget" name="openGLWidget"/>
     </item>
-    <item row="0" column="0">
-     <widget class="TreeWidget" name="treeWidget">
-      <property name="maximumSize">
-       <size>
-        <width>300</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <attribute name="headerVisible">
-       <bool>false</bool>
-      </attribute>
-      <column>
-       <property name="text">
-        <string notr="true">1</string>
-       </property>
-      </column>
-     </widget>
-    </item>
-    <item row="1" column="0">
+    <item row="2" column="0">
      <widget class="TableWidget" name="tableWidget">
       <property name="minimumSize">
        <size>
-        <width>300</width>
+        <width>320</width>
         <height>280</height>
        </size>
       </property>
@@ -159,7 +141,31 @@
       </item>
      </widget>
     </item>
-    <item row="2" column="0">
+    <item row="1" column="0">
+     <widget class="TreeWidget" name="treeWidget">
+      <property name="minimumSize">
+       <size>
+        <width>320</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>300</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <attribute name="headerVisible">
+       <bool>false</bool>
+      </attribute>
+      <column>
+       <property name="text">
+        <string notr="true">1</string>
+       </property>
+      </column>
+     </widget>
+    </item>
+    <item row="3" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="minimumSize">
        <size>
@@ -174,7 +180,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab1">
        <attribute name="title">
@@ -347,9 +353,9 @@
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>20</y>
-          <width>111</width>
-          <height>23</height>
+          <y>60</y>
+          <width>141</width>
+          <height>31</height>
          </rect>
         </property>
         <property name="text">
@@ -362,9 +368,9 @@
        <widget class="QLabel" name="label_7">
         <property name="geometry">
          <rect>
-          <x>120</x>
-          <y>20</y>
-          <width>81</width>
+          <x>10</x>
+          <y>100</y>
+          <width>121</width>
           <height>23</height>
          </rect>
         </property>
@@ -375,8 +381,8 @@
        <widget class="QLineEdit" name="lineEdit">
         <property name="geometry">
          <rect>
-          <x>220</x>
-          <y>20</y>
+          <x>160</x>
+          <y>100</y>
           <width>71</width>
           <height>24</height>
          </rect>
@@ -388,9 +394,9 @@
        <widget class="QLabel" name="label_8">
         <property name="geometry">
          <rect>
-          <x>120</x>
-          <y>50</y>
-          <width>101</width>
+          <x>10</x>
+          <y>130</y>
+          <width>141</width>
           <height>23</height>
          </rect>
         </property>
@@ -401,9 +407,9 @@
        <widget class="QLabel" name="label_9">
         <property name="geometry">
          <rect>
-          <x>120</x>
-          <y>80</y>
-          <width>81</width>
+          <x>10</x>
+          <y>160</y>
+          <width>111</width>
           <height>23</height>
          </rect>
         </property>
@@ -414,8 +420,8 @@
        <widget class="QLineEdit" name="lineEdit_2">
         <property name="geometry">
          <rect>
-          <x>220</x>
-          <y>50</y>
+          <x>160</x>
+          <y>130</y>
           <width>71</width>
           <height>24</height>
          </rect>
@@ -427,8 +433,8 @@
        <widget class="QLineEdit" name="lineEdit_3">
         <property name="geometry">
          <rect>
-          <x>220</x>
-          <y>80</y>
+          <x>160</x>
+          <y>160</y>
           <width>71</width>
           <height>24</height>
          </rect>
@@ -447,8 +453,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1657</width>
-     <height>22</height>
+     <width>1765</width>
+     <height>38</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOpen_Structure">

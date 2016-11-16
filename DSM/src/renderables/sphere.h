@@ -36,7 +36,7 @@ public:
 			sph_instance = new BaseSphere();
 		return sph_instance;
 
-	};
+	}
 
 	std::vector<glm::vec3> getVertices();
 	std::vector <glm::vec3> getNormals();

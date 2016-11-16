@@ -1,7 +1,9 @@
-#define COORD_SYSTEM_ORIGIN glm::dvec3(-1.33,-0.85,0.0)
+#define COORD_SYSTEM_ORIGIN glm::dvec3(0.0,0.0,0.0)
 #ifdef _DEBUG
-#include "../utils/timer.h"
 #endif // _DEBUG
+#ifdef _TIMING
+#include "../utils/timer.h"
+#endif
 #include <iostream>
 #include "../global.h"
 #include "../renderables/cone.h"
@@ -180,8 +182,6 @@ void Generator::deleteCylinderBufs(Structure *structure)
     m_glWidget->doneCurrent();
 }
 
-
-
 void Generator::setupCylinderBufs(Structure *structure)
 {
     m_glWidget->makeCurrent();
@@ -190,13 +190,13 @@ void Generator::setupCylinderBufs(Structure *structure)
     std::vector<glm::mat4>& imMats = structure->imMats;
     std::vector<Cylinder>& cylinders = structure->cylinders;
     std::vector<GLfloat> cylColours;
-    cylColours.reserve(cylinders.size() + (cylinders.size()*imMats.size()));
+    cylColours.reserve((cylinders.size() + (cylinders.size()*imMats.size()))*sizeof(glm::vec3));
     std::vector<GLfloat> cylInts;
-    cylInts.reserve(cylinders.size() + (cylinders.size()*imMats.size()));
+    cylInts.reserve((cylinders.size() + (cylinders.size()*imMats.size()))*sizeof(GLfloat));
     std::vector<GLfloat> cylPows;
-    cylPows.reserve(cylinders.size() + (cylinders.size()*imMats.size()));
+    cylPows.reserve((cylinders.size() + (cylinders.size()*imMats.size()))*sizeof(GLfloat));
     std::vector<glm::mat4> cylMats;
-    cylMats.reserve(cylinders.size() + (cylinders.size()*imMats.size()));
+    cylMats.reserve((cylinders.size() + (cylinders.size()*imMats.size()))*sizeof(glm::mat4));
     for (unsigned int i = 0; i < cylinders.size(); i++)
     {
         cylColours.push_back(cylinders[i].colour.x / 65535.0f);
@@ -243,26 +243,29 @@ void Generator::setupCylinderBufs(Structure *structure)
 		structure->vaos3D[1]->submitVBO(structure->matBufs3D[1], VAO::MAT);
 		structure->vaos3D[1]->submitVBO(structure->intBufs3D[1], VAO::INT);
 		structure->vaos3D[1]->submitVBO(structure->powBufs3D[1], VAO::POW);
-#ifdef _DEBUG
-		GLenum error = glGetError();
-		if (error != GL_NO_ERROR)
-		{
-			std::cout << "OpenGL Error trying to render2D: " << error << std::endl;
-		}
-#endif
-		glBindBuffer(GL_ARRAY_BUFFER,0);
-		
 
     }
     else
     {
-//        structure->vaos[1].bind();
-//        setupVaoVertBuf(&structure->vertBufs3D[1],NULL,cylVertices.size());
-//        setupVaoColBuf(&structure->colBufs3D[1],NULL,cylColours.size());
-//        setupVaoNormBuf(&structure->normBufs3D[1],NULL,cylNormals.size());
-//        setupVaoMatBuf(&structure->matBufs3D[1],NULL,cylMats.size());
-//        setupVaoIntBuf(&structure->intBufs3D[1],NULL,cylInts.size());
-//        setupVaoPowBuf(&structure->powBufs3D[1],NULL,cylPows.size());
+		structure->vaos3D[1]->bind();
+		structure->vertBufs3D[1]->bind();
+		structure->vertBufs3D[1]->allocate(cylVertices.size() * sizeof(glm::vec3), GL_DYNAMIC_DRAW);
+		structure->colBufs3D[1]->bind();
+		structure->colBufs3D[1]->allocate(cylColours.size() * sizeof(GLfloat), GL_DYNAMIC_DRAW);
+		structure->normBufs3D[1]->bind();
+		structure->normBufs3D[1]->allocate(cylNormals.size() * sizeof(glm::vec3), GL_DYNAMIC_DRAW);
+		structure->matBufs3D[1]->bind();
+		structure->matBufs3D[1]->allocate(cylMats.size() * sizeof(glm::mat4), GL_DYNAMIC_DRAW);
+		structure->intBufs3D[1]->bind();
+		structure->intBufs3D[1]->allocate(cylInts.size() * sizeof(GLfloat), GL_DYNAMIC_DRAW);
+		structure->powBufs3D[1]->bind();
+		structure->powBufs3D[1]->allocate(cylPows.size() * sizeof(GLfloat), GL_DYNAMIC_DRAW);
+		structure->vaos3D[1]->submitVBO(structure->vertBufs3D[1], VAO::VERT);
+		structure->vaos3D[1]->submitVBO(structure->colBufs3D[1], VAO::COL);
+		structure->vaos3D[1]->submitVBO(structure->normBufs3D[1], VAO::NORM);
+		structure->vaos3D[1]->submitVBO(structure->matBufs3D[1], VAO::MAT);
+		structure->vaos3D[1]->submitVBO(structure->intBufs3D[1], VAO::INT);
+		structure->vaos3D[1]->submitVBO(structure->powBufs3D[1], VAO::POW);
     }
     std::vector<GLuint> indices = BaseCylinder::instance()->getIndices();
     structure->indBufs3D[1]->bind();
@@ -273,17 +276,26 @@ void Generator::setupCylinderBufs(Structure *structure)
 	structure->vaos3D[1]->unbind();
 
     m_glWidget->doneCurrent();
+#ifdef _DEBUG
+		GLenum error = glGetError();
+		if (error != GL_NO_ERROR)
+		{
+			std::cout << "OpenGL Error trying to render2D: " << error << std::endl;
+		}
+#endif
 
 }
 
 void Generator::updateStructureBufs(Structure* structure)
 {
-
+#ifdef _TIMING
+	Timer::instance()->reset();
+#endif
 	std::vector<glm::mat4>& imMats = structure->imMats;
 	std::vector<Sphere>& spheres = structure->spheres;
 	m_glWidget->makeCurrent();
 	std::vector<glm::mat4> mats;
-	mats.reserve(spheres.size() +(spheres.size() * imMats.size()));
+	mats.reserve((spheres.size() +(spheres.size() * imMats.size()))*sizeof(glm::mat4));
 	for (int i = 0; i < spheres.size(); i++)
 	{
 		mats.push_back(spheres[i].mat);
@@ -307,7 +319,9 @@ void Generator::updateStructureBufs(Structure* structure)
 #endif
 
 	m_glWidget->doneCurrent();
-
+#ifdef _TIMING
+	Timer::instance()->print("regenning buffers took:");
+#endif
 	m_glWidget->update();
 
 }
@@ -316,7 +330,7 @@ void Generator::genVaos(Structure* structure)
 {	
 	m_glWidget->makeCurrent();
 #if _DEBUG
-	Timer timer;
+
 #endif // _DEBUG
 	std::vector<std::vector<glm::vec3>>vertices;
 	std::vector<std::vector<GLfloat>>colours;
@@ -333,14 +347,16 @@ void Generator::genVaos(Structure* structure)
 	structure->numObjsList3D.clear();
 	structure->numVertsList3D.clear();
 	std::vector<glm::mat4> imMats = structure->imMats;
-	std::vector < glm::vec3 >sphVertices=BaseSphere::instance()->getVertices();
-	std::vector<glm::vec3>sphNormals= BaseSphere::instance()->getNormals();
-	std::vector<GLuint> sphIndices= BaseSphere::instance()->getIndices();
+
+	
+	std::vector < glm::vec3 >sphVertices = BaseSphere::instance()->getVertices();
+	std::vector<glm::vec3>sphNormals = BaseSphere::instance()->getNormals();
+	std::vector<GLuint> sphIndices = BaseSphere::instance()->getIndices();
 	std::vector<GLfloat> sphColours;
 	std::vector<GLfloat> sphInts;
 	std::vector<GLfloat> sphPows;
-	std::vector<GLfloat> sphNumbers;
 	std::vector<glm::mat4> sphMats;
+	std::vector<GLfloat> sphNumbers;
 	for (unsigned int i = 0; i < spheres.size(); i++)
 	{
 		sphColours.push_back(spheres[i].colour.x / 65535.0f);
@@ -350,7 +366,7 @@ void Generator::genVaos(Structure* structure)
 		sphPows.push_back(spheres[i].specPower);
 		sphNumbers.push_back((GLfloat)spheres[i].index);
 		sphMats.push_back(spheres[i].mat);
-		for (unsigned int i1 = 0 ; i1<imMats.size();i1++)
+		for (unsigned int i1 = 0; i1 < imMats.size(); i1++)
 		{
 			sphColours.push_back(spheres[i].colour.x / 65535.0f);
 			sphColours.push_back(spheres[i].colour.y / 65535.0f);
@@ -358,7 +374,7 @@ void Generator::genVaos(Structure* structure)
 			sphInts.push_back(spheres[i].specIntensity);
 			sphPows.push_back(spheres[i].specPower);
 			sphNumbers.push_back(spheres[i].index);
-			sphMats.push_back(imMats[i1]*spheres[i].mat);
+			sphMats.push_back(imMats[i1] * spheres[i].mat);
 		}
 
 	}
@@ -371,6 +387,7 @@ void Generator::genVaos(Structure* structure)
 	indices.push_back(sphIndices);
 	structure->numVertsList3D.push_back(sphIndices.size());
 	structure->numObjsList3D.push_back(sphPows.size());
+	
 
 	if (!cylinders.empty())
 	{
@@ -412,6 +429,22 @@ void Generator::genVaos(Structure* structure)
 		pows.push_back(cylPows);
 		indices.push_back(cylIndices);
 	}
+	else
+	{
+		std::vector<glm::vec3> blabla;
+		std::vector<GLfloat> blabla1;
+		std::vector<glm::mat4> blabla2;
+		std::vector<GLuint> blabla3;
+		vertices.push_back(blabla);
+		colours.push_back(blabla1);
+		normals.push_back(blabla);
+		matrices.push_back(blabla2);
+		ints.push_back(blabla1);
+		pows.push_back(blabla1);
+		indices.push_back(blabla3);
+		structure->numVertsList3D.push_back(0);
+		structure->numObjsList3D.push_back(0);
+	}
 
 	std::vector<glm::vec3> cubVertices = BaseCube::instance()->getVertices();
 	std::vector < glm::vec3 > cubNormals = BaseCube::instance()->getNormals();
@@ -450,10 +483,30 @@ void Generator::genVaos(Structure* structure)
 	indices.push_back(cubIndices);
 	for (int i = 0; i < 3; i++)
 	{
-		if (cylinders.empty())
+		if (i == 1 & cylinders.empty())
 		{
-			i -= 1;
+			structure->vaos3D[i]->bind();
+
+			structure->vertBufs3D[i]->bind();
+			structure->vaos3D[i]->submitVBO(structure->vertBufs3D[i], VAO::VERT);
+
+			structure->colBufs3D[i]->bind();
+			structure->vaos3D[i]->submitVBO(structure->colBufs3D[i], VAO::COL);
+
+			structure->normBufs3D[i]->bind();
+			structure->vaos3D[i]->submitVBO(structure->normBufs3D[i], VAO::NORM);
+
+			structure->matBufs3D[i]->bind();
+			structure->vaos3D[i]->submitVBO(structure->matBufs3D[i], VAO::MAT);
+
+			structure->intBufs3D[i]->bind();
+			structure->vaos3D[i]->submitVBO(structure->intBufs3D[i], VAO::INT);
+
+			structure->powBufs3D[i]->bind();
+			structure->vaos3D[i]->submitVBO(structure->powBufs3D[i], VAO::POW);
+			structure->indBufs3D[i]->bind();
 			continue;
+			
 		}
 		structure->vaos3D[i]->bind();
 	
@@ -480,7 +533,7 @@ void Generator::genVaos(Structure* structure)
 		structure->powBufs3D[i]->bind();
 		structure->powBufs3D[i]->submitData(&pows[i][0], pows[i].size() * sizeof(GLfloat));
 		structure->vaos3D[i]->submitVBO(structure->powBufs3D[i], VAO::POW);
-		if (i == 0)
+		if (i == 0 & !spheres.empty())
 		{
 			structure->numberBufs3D[0]->bind();
 			structure->numberBufs3D[0]->submitData(&sphNumbers[0], sphNumbers.size() * sizeof(GLfloat));
@@ -511,7 +564,7 @@ void Generator::genVaos(Structure* structure)
 	}
 #endif
 #if _DEBUG
-std::cout << "generating buffers took: " << timer.elapsed() << std::endl;
+
 #endif // _DEBUG
 	m_glWidget->doneCurrent();
 	m_glWidget->update();
@@ -535,15 +588,15 @@ void Generator::deleteStructureBuffers(Structure * structure)
 	m_glWidget->doneCurrent();
 }
 
-void Generator::createHUDRectangle(glm::vec3 v1, glm::vec3 v2, glm::vec3 colour, std::vector<glm::vec3>* verts, std::vector<glm::vec3>* colours)
+void Generator::createHUDRectangle(glm::vec3 start, float width,float height, glm::vec3 colour, std::vector<glm::vec3>* verts, std::vector<glm::vec3>* colours)
 {
 
-	verts->push_back(v1);
-	verts->push_back(v1 + glm::vec3(v2.x, 0.0f, 0.0f));
-	verts->push_back(v1 + glm::vec3(0.0f,v2.y, 0.0f));
-	verts->push_back(v1 + glm::vec3(0.0f, v2.y, 0.0f));
-	verts->push_back(v2);
-	verts->push_back(v1 + glm::vec3(v2.x, 0.0f, 0.0f));
+	verts->push_back(start);
+	verts->push_back(start + glm::vec3(width, 0.0f, 0.0f));
+	verts->push_back(start + glm::vec3(0.0f,height, 0.0f));
+	verts->push_back(start + glm::vec3(0.0f, height, 0.0f));
+	verts->push_back(start + glm::vec3(width, 0.0f, 0.0f));
+	verts->push_back(start+ glm::vec3(width, height, 0.0f));
 
 	colours->push_back(colour);
 	colours->push_back(colour);
@@ -560,12 +613,7 @@ void Generator::create2DStructureCylinder(glm::vec3 v1, glm::vec3 v2, glm::vec3 
 
 	Cylinder cylinder(v1, v2, 0.01f, colour, 0.9f, 10.0f, Cylinder::NORMAL);
 
-	vao->create();
 	vao->bind();
-	for (int i = 0; i < vbos.size(); i++)
-	{
-		vbos[i]->create();
-	}
 
 	vbos[0]->bind();
 	vbos[0]->allocateAndSubmit(&cylinder.vertices[0][0], cylinder.vertices.size() * sizeof(glm::vec3), GL_STATIC_DRAW);
@@ -757,14 +805,12 @@ void Generator::createAndSubmit2DSphere(glm::vec3 center, float radius, glm::vec
 
 }
 
-
-
 void Generator::createAndSubmit2DVector(glm::vec3 v1,glm::vec3 v2, glm::vec3 colour,Direction direction)
 {
 	
 }
 
-void Generator::setupStructureCoordinateSystem(Structure* structure)
+void Generator::initStructureCoordinateSystemBufs(Structure* structure)
 {
 	m_glWidget->makeCurrent();
 
@@ -779,6 +825,16 @@ void Generator::setupStructureCoordinateSystem(Structure* structure)
 		VBO* matBuf = new VBO(GL_ARRAY_BUFFER);
 		VBO* intBuf = new VBO(GL_ARRAY_BUFFER);
 		VBO* powBuf = new VBO(GL_ARRAY_BUFFER);
+		vao->create();
+		vao->bind();
+		vertBuf->create();
+		indBuf->create();
+		colBuf->create();
+		normBuf->create();
+		matBuf->create();
+		intBuf->create();
+		powBuf->create();
+		vao->unbind();
 		structure->vertBufs2D.push_back(vertBuf);
 		structure->indBufs2D.push_back(indBuf);
 		structure->colBufs2D.push_back(colBuf);
@@ -788,6 +844,14 @@ void Generator::setupStructureCoordinateSystem(Structure* structure)
 		structure->powBufs2D.push_back(powBuf);
 		structure->vaos2D.push_back(vao);
 	}
+	m_glWidget->doneCurrent();
+}
+
+void Generator::setupStructureCoordinateSystemBufs(Structure* structure)
+{
+	m_glWidget->makeCurrent();
+
+	std::vector<VBO*> temp_vbos;
 
 	temp_vbos.push_back(structure->vertBufs2D[0]);
 	temp_vbos.push_back(structure->colBufs2D[0]);
@@ -819,10 +883,6 @@ void Generator::setupStructureCoordinateSystem(Structure* structure)
 	temp_vbos.push_back(structure->indBufs2D[4]);
 	create2DStructureCone(COORD_SYSTEM_ORIGIN + glm::normalize(structure->getCell()[0])/10.0, COORD_SYSTEM_ORIGIN + (glm::normalize(structure->getCell()[0])+ 0.2* glm::normalize(structure->getCell()[0]))/10.0, glm::vec3(1.0f, 0.0f, 0.0f), structure->vaos2D[4], temp_vbos);
 	temp_vbos.clear();
-	structure->numObjsList2D.push_back(1);
-	structure->numObjsList2D.push_back(1);
-	structure->numVertsList2D.push_back(BaseCylinder::instance()->getIndices().size());
-	structure->numVertsList2D.push_back(BaseCone::instance()->getIndices().size());
 
 	temp_vbos.push_back(structure->vertBufs2D[2]);
 	temp_vbos.push_back(structure->colBufs2D[2]);
@@ -842,10 +902,6 @@ void Generator::setupStructureCoordinateSystem(Structure* structure)
 	temp_vbos.push_back(structure->indBufs2D[5]);
 	create2DStructureCone(COORD_SYSTEM_ORIGIN + maths::convertZupToZback(glm::normalize(structure->getCell()[1])/10.0), COORD_SYSTEM_ORIGIN + maths::convertZupToZback(glm::normalize(structure->getCell()[1]) + 0.2* glm::normalize(structure->getCell()[1]))/10.0, glm::vec3(0.0f, 1.0f, 0.0f), structure->vaos2D[5], temp_vbos);
 	temp_vbos.clear();
-	structure->numObjsList2D.push_back(1);
-	structure->numObjsList2D.push_back(1);
-	structure->numVertsList2D.push_back(BaseCylinder::instance()->getIndices().size());
-	structure->numVertsList2D.push_back(BaseCone::instance()->getIndices().size());
 
 	temp_vbos.push_back(structure->vertBufs2D[3]);
 	temp_vbos.push_back(structure->colBufs2D[3]);
@@ -865,10 +921,20 @@ void Generator::setupStructureCoordinateSystem(Structure* structure)
 	temp_vbos.push_back(structure->indBufs2D[6]);
 	create2DStructureCone(COORD_SYSTEM_ORIGIN + maths::convertZupToZback(glm::normalize(structure->getCell()[2])/10.0), COORD_SYSTEM_ORIGIN + maths::convertZupToZback((glm::normalize(structure->getCell()[2]) + 0.2*glm::normalize(structure->getCell()[2]))/10.0), glm::vec3(0.0f, 0.0f, 1.0f), structure->vaos2D[6], temp_vbos);
 	temp_vbos.clear();
-	structure->numObjsList2D.push_back(1);
-	structure->numObjsList2D.push_back(1);
-	structure->numVertsList2D.push_back(BaseCylinder::instance()->getIndices().size());
-	structure->numVertsList2D.push_back(BaseCone::instance()->getIndices().size());
+	
+	for (int i = 0; i < 6; i++)
+	{
+		structure->numObjsList2D.push_back(1);
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		structure->numVertsList2D.push_back(BaseCylinder::instance()->getIndices().size());
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		structure->numVertsList2D.push_back(BaseCone::instance()->getIndices().size());
+	}
+
 	m_glWidget->doneCurrent();
 
 }

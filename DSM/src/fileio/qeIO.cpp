@@ -95,6 +95,11 @@ bool qeRW::loadIN(QString& path, std::vector<Particle> &out_atoms, glm::dmat3 &o
 	return true;
 }
 
+bool qeRW::loadOUT(QString& path, std::vector <Particle> &out_atoms, glm::dmat3 &out_cell)
+{
+	return true;
+}
+
 bool qeRW::saveStructure(Structure* structure,bool saveAs)
 {
 	QTextCodec *codec = QTextCodec::codecForLocale();

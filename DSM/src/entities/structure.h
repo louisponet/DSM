@@ -25,6 +25,20 @@ private:
 
 
 public:
+	struct Properties
+	{
+		bool edited = false;
+		bool cellEdited = false;
+		bool isnew = false;
+	};
+
+	struct Options
+	{
+		bool displayCells = true;
+	};
+	Properties properties;
+	Options options;
+
 	std::vector<Cylinder> cylinders;
 	std::vector<Sphere> spheres;
 	std::vector<Cube> cubes;
@@ -37,6 +51,7 @@ public:
 	std::vector<unsigned int> numVertsList3D, numObjsList3D;
 	std::vector<unsigned int> numVertsList2D, numObjsList2D;
 
+
 	Camera camera;
 	unsigned int v1PosImCount = 0;
 	unsigned int v1NegImCount = 0;
@@ -44,9 +59,6 @@ public:
 	unsigned int v2NegImCount = 0;
 	unsigned int v3PosImCount = 0;
 	unsigned int v3NegImCount = 0;
-	bool displayCells = true;
-	bool edited = false;
-	bool isnew = false;
 	QString file = NULL;
     QString name;
 private:
@@ -83,7 +95,6 @@ public:
 	void removeAtom(int index);
 
 	void create();
-	void update();
 
     float getCovaScale() const;
     void setCovaScale(float CovaScale);

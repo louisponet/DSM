@@ -163,7 +163,7 @@ void MainWindow::menuActionTriggered(QAction* item)
         if (tmp_Structure)
             delete tmp_Structure;
         tmp_Structure = new Structure();
-        tmp_Structure->isnew = true;
+        tmp_Structure->properties.isnew = true;
         m_CreateStructureWindow = new CreateStructureWindow(tmp_Structure);
 
         QObject::connect(m_CreateStructureWindow, SIGNAL(structureCreated(Structure*)), this, SLOT(acceptStructure(Structure*)));
@@ -181,7 +181,7 @@ void MainWindow::menuActionTriggered(QAction* item)
         if (item->text() == "Close")
         {
 
-            if (m_Structures[m_SelectedStructure]->edited)
+            if (m_Structures[m_SelectedStructure]->properties.edited)
             {
                 QMessageBox* messagebox = new QMessageBox;
                 messagebox->setText("Structure was edited, closing it will destroy all changes.\nAre you sure?");
@@ -199,14 +199,14 @@ void MainWindow::menuActionTriggered(QAction* item)
         else  if (item->text() == "Save")
         {
 
-            if (!m_Structures[m_SelectedStructure]->edited)
+            if (!m_Structures[m_SelectedStructure]->properties.edited)
             {
                 displayMessage(QString("Edit structure before saving!"));
                 return;
             }
             if (m_QeHandler.saveStructure(m_Structures[m_SelectedStructure]))
             {
-                m_Structures[m_SelectedStructure]->edited = false;
+                m_Structures[m_SelectedStructure]->properties.edited = false;
                 displayMessage(QString("Saving Structure successful!\nSavefile is: ") += m_Structures[m_SelectedStructure]->file);
             }
             else
@@ -216,7 +216,7 @@ void MainWindow::menuActionTriggered(QAction* item)
         {
             if (m_QeHandler.saveStructure(m_Structures[m_SelectedStructure], true))
             {
-                m_Structures[m_SelectedStructure]->edited = false;
+                m_Structures[m_SelectedStructure]->properties.edited = false;
                 displayMessage(QString("Saving Structure successful!\nSavefile is:") + m_Structures[m_SelectedStructure]->file);
             }
             else
@@ -438,10 +438,11 @@ void MainWindow::covaScaleChanged(QString text)
 void MainWindow::acceptStructure(Structure* structure)
 {
     m_CreateStructureWindow->close();
-    structure->edited = true;
-    if (structure->isnew)
+    structure->properties.edited = true;
+	structure->properties.cellEdited = false;
+    if (structure->properties.isnew)
     {
-        structure->isnew = false;
+        structure->properties.isnew = false;
         m_Structures.push_back(structure);
         tmp_Structure = nullptr;
         m_SelectedStructure = m_Structures.size() - 1;

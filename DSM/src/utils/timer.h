@@ -4,10 +4,8 @@
 
 class Timer
 {
+	static Timer* timer_instance;
 private:
-	LARGE_INTEGER m_Start;
-	double m_Frequency;
-public:
 	Timer()
 	{
 		LARGE_INTEGER frequency;
@@ -15,6 +13,10 @@ public:
 		m_Frequency = 1.0 / frequency.QuadPart;
 		QueryPerformanceCounter(&m_Start);
 	}
+
+	LARGE_INTEGER m_Start;
+	double m_Frequency;
+public:
 	void reset()
 	{
 		QueryPerformanceCounter(&m_Start);
@@ -33,4 +35,12 @@ public:
 		std::cout << string << elapsed() <<"s"<< std::endl;
 		
 	}
+
+	static Timer* instance()
+	{
+		if (!timer_instance)
+			timer_instance = new Timer();
+		return timer_instance;
+	}
 };
+

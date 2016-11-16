@@ -1,6 +1,6 @@
 #pragma once
 #ifndef __APPLE__
-#include "../utils/timer.h"
+
 #endif
 #include <QtWidgets/QOpenGLWidget>
 #include <vector>
@@ -43,7 +43,6 @@ private:
 	glm::mat4 m_ProjectionMatrix;
 	glm::mat4 m_OrthogonalMatrix;
 	bool m_Testing = false;
-	Timer m_Timer;
 	int m_SelectedStructure = -1;
 public:
 

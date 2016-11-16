@@ -149,15 +149,10 @@ void CreateStructureWindow::minButtonClicked()
 
 void CreateStructureWindow::createButtonClicked()
 {
-	if (tmp_Structure->isnew)
-	{
-		tmp_Structure->create();
-	}
-	else
-	{
+	if (!tmp_Structure->properties.isnew)
 		tmp_Structure->resetBufs3D();
-		tmp_Structure->update();
-	}
+	tmp_Structure->create();
+	
 	emit structureCreated(tmp_Structure);
 }
 
@@ -228,6 +223,7 @@ void CreateStructureWindow::comboBoxSelection(QString cellLayout)
 
 void CreateStructureWindow::updateCell(int i , int j )
 {
+	tmp_Structure->properties.cellEdited = true;
 	ui.tableWidget_2->blockSignals(true);
 	switch (m_CellLayout)
 	{

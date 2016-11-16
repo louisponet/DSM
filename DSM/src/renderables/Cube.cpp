@@ -42,7 +42,7 @@ void Cube::initInfo()
 	vertices.reserve(8);
 	normals.reserve(8);
 	indices.reserve(36);
-    reader.loadOBJ1("src/renderables/cube.txt", vertices, indices, normals);
+    reader.loadOBJ("src/renderables/cube.txt", vertices, indices, normals);
 
 }
 

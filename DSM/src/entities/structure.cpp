@@ -7,7 +7,9 @@
 #include "structure.h"
 #include "../graphics/generator.h"
 #include "../utils/maths.h"
+#ifdef _TIMING
 #include "../utils/timer.h"
+#endif
 
 #ifdef _DEBUG
 #include <iostream>
@@ -93,7 +95,8 @@ void Structure::populateAtoms(std::vector<Particle>& inAtoms)
 	genBonds();
 	Generator::instance()->initStructureBufs(this);
 	Generator::instance()->genVaos(this);
-	Generator::instance()->setupStructureCoordinateSystem(this);
+	Generator::instance()->initStructureCoordinateSystemBufs(this);
+	Generator::instance()->setupStructureCoordinateSystemBufs(this);
 }
 
 void Structure::updateImageMats()
@@ -167,7 +170,9 @@ void Structure::updateImageMats()
 
 void Structure::updateAtomCoords(uint& index, glm::dvec3 new_coords)
 {
-
+#ifdef _TIMING
+	Timer::instance()->reset();
+#endif
     new_coords = glm::inverse(m_Cell)*new_coords;
 	glm::dvec3 oldCoords = m_Atoms[index].coords;
     if(new_coords[0]>1.0f)
@@ -185,7 +190,10 @@ void Structure::updateAtomCoords(uint& index, glm::dvec3 new_coords)
     m_Atoms[index].coords = m_Cell*new_coords;
     spheres[index] = Sphere((glm::vec3) m_Atoms[index].coords, m_Atoms[index].getCova() * m_AtomScale, m_Atoms[index].getColour(), 0.9f, 10.0f, spheres[index].index);
 	regenBonds(index, oldCoords);
-	edited = true;
+	properties.edited = true;
+#ifdef _TIMING
+	Timer::instance()->print("Regenning structure took:");
+#endif
 	Generator::instance()->updateStructureBufs(this);
 
 }
@@ -199,20 +207,16 @@ void Structure::create()
 	calculateOrigin();
 	Generator::instance()->initStructureBufs(this);
 	Generator::instance()->genVaos(this);
-	Generator::instance()->setupStructureCoordinateSystem(this);
-
+	if (this->properties.isnew)
+	{
+		Generator::instance()->initStructureCoordinateSystemBufs(this);
+		Generator::instance()->setupStructureCoordinateSystemBufs(this);
+	}
+	else if (this->properties.cellEdited)
+		Generator::instance()->setupStructureCoordinateSystemBufs(this);
 }
 
-void Structure::update()
-{
-	genFullCell();
-	genSurroundings();
-	genBonds();
-	genSpheres();
-	calculateOrigin();
-	Generator::instance()->initStructureBufs(this);
-	Generator::instance()->genVaos(this);
-}
+
 
 
 void Structure::setCell(glm::dmat3& cell)

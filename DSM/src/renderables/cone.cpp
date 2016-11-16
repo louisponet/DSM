@@ -47,7 +47,7 @@ void Cone::initInfo()
 	normals.reserve(128);
 	indices.reserve(186);
 	vertices.reserve(128);
-	reader.loadOBJ1("src/renderables/cone.obj", vertices, indices, normals);
+	reader.loadOBJ("src/renderables/cone.obj", vertices, indices, normals);
 
 }
 

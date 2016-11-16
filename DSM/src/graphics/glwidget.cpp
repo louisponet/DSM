@@ -5,7 +5,7 @@
 #include "../global.h"
 #include "generator.h"
 #include "glwidget.h"
-
+#include "../utils/maths.h"
 
 GLWidget::GLWidget(QWidget *parent) :QOpenGLWidget(parent),
 m_3DShader("src/graphics/shaders/main.vert","src/graphics/shaders/main.frag"),
@@ -84,7 +84,7 @@ void GLWidget::initHUD()
 	VBO* vertVBO = new VBO(GL_ARRAY_BUFFER);
 	VBO* colVBO  = new VBO(GL_ARRAY_BUFFER);
 
-	Generator::instance()->createHUDRectangle(glm::vec3(-1.17f, -0.7f, -0.9f), glm::vec3(-1.17f, -1.0f, -0.9f), glm::vec3(0.1f), &vertices, &colours);
+	Generator::instance()->createHUDRectangle(glm::vec3(-0.17f, -0.17f, -0.9f), 0.37f, 0.37f,glm::vec3(0.2f,0.2f,0.2f), &vertices, &colours);
 	m_HUDVertCount += 6;
 	//Generator::instance()->createHUDRectangle(glm::vec3(-1.17f, -0.7f, -0.89f), glm::vec3(-1.17f, -0.1f, -0.89f), glm::vec3(1.0f), &vertices,&colours);
 	m_HUDVertCount += 6;
@@ -134,6 +134,8 @@ void GLWidget::resizeGL(int w, int h)
 
 	makeCurrent();
 	m_ProjectionMatrix = glm::perspective(1.0472f / 2.0f,(float) w/h, 0.1f, 200.0f);
+	m_OrthogonalMatrix = glm::ortho(-1.0f*width() / height(), 1.0f*width() / height(), -1.0f, 1.0f)*maths::translateCM(glm::vec3(-1.0f*width() / height()+0.17f,-0.83f,0.0f));
+
 	update();
 }
 
@@ -141,36 +143,39 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 {
 	float dx = event->x() - m_LastPos.x();
 	float dy = event->y() - m_LastPos.y();
-	if (event->buttons() & Qt::RightButton)
+	if (m_SelectedStructure != -1)
 	{
-		if (event->modifiers() & Qt::ControlModifier)
+		if (event->buttons() & Qt::RightButton)
 		{
-			m_Camera->mouseUpdate(dx, dy);
-		}
-		else
-		{
-			m_Camera->rotateWorld(dx, dy);
-		}
-	}
-	if (event->buttons()&Qt::LeftButton)
-	{
-		if (event->modifiers()&Qt::AltModifier)
-		{
-			if (selectedIndex!=100000)
+			if (event->modifiers() & Qt::ControlModifier)
 			{
+				m_Camera->mouseUpdate(dx, dy);
+			}
+			else
+			{
+				m_Camera->rotateWorld(dx, dy);
+			}
+		}
+		if (event->buttons()&Qt::LeftButton)
+		{
+			if (event->modifiers()&Qt::AltModifier)
+			{
+				if (selectedIndex != 100000)
+				{
 
-				float x = 2.0f*event->x() / this->width() - 1.0f;
-				float y = 1.0f - 2.0f*event->y() / this->height();
-				float x1 = 2.0f*m_LastPos.x() / this->width() - 1.0f;
-				float y1 = 1.0f - 2.0f*m_LastPos.y() / this->height();
-				Sphere& sphere = m_Structures[m_SelectedStructure]->spheres[selectedIndex];
-				glm::vec3 coords = glm::vec3((m_Camera->globalTransMat)*glm::vec4(sphere.center,1.0f));
-				float dist = glm::distance(m_Camera->position, coords);
-				float dx1 = 19.5*(x - x1)*dist;
-				float dy1 = 19.5*(y - y1)*dist;
-				glm::vec4 vec = glm::inverse(glm::lookAt(m_Camera->position, m_Camera->position + m_Camera->viewDirection, m_Camera->up))*glm::inverse(m_ProjectionMatrix)*glm::vec4(dx1, dy1, 0.0f, 0.0f)*m_Camera->globalTransMat;
+					float x = 2.0f*event->x() / this->width() - 1.0f;
+					float y = 1.0f - 2.0f*event->y() / this->height();
+					float x1 = 2.0f*m_LastPos.x() / this->width() - 1.0f;
+					float y1 = 1.0f - 2.0f*m_LastPos.y() / this->height();
+					Sphere& sphere = m_Structures[m_SelectedStructure]->spheres[selectedIndex];
+					glm::vec3 coords = glm::vec3((m_Camera->globalTransMat)*glm::vec4(sphere.center, 1.0f));
+					float dist = glm::distance(m_Camera->position, coords);
+					float dx1 = 19.5*(x - x1)*dist;
+					float dy1 = 19.5*(y - y1)*dist;
+					glm::vec4 vec = glm::inverse(glm::lookAt(m_Camera->position, m_Camera->position + m_Camera->viewDirection, m_Camera->up))*glm::inverse(m_ProjectionMatrix)*glm::vec4(dx1, dy1, 0.0f, 0.0f)*m_Camera->globalTransMat;
 
-				emit atomMoved(glm::vec3(vec));
+					emit atomMoved(glm::vec3(vec));
+				}
 			}
 		}
 	}
@@ -181,28 +186,32 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 void GLWidget::mousePressEvent(QMouseEvent *event)
 {
 	m_LastPos = event->pos();
-	if (event->buttons()&Qt::LeftButton)
+	if (m_SelectedStructure != -1)
 	{
-		glm::vec4 pickedRay = calculateMouseRay(event->x(), event->y());
-		emit mouseClicked(pickedRay, m_Camera->position, m_Camera->globalTransMat);
-
+		if (event->buttons()&Qt::LeftButton)
+		{
+			glm::vec4 pickedRay = calculateMouseRay(event->x(), event->y());
+			emit mouseClicked(pickedRay, m_Camera->position, m_Camera->globalTransMat);
+		}
 	}
-
 }
 
 void GLWidget::wheelEvent(QWheelEvent *event)
 {
-	if (event->buttons()&Qt::LeftButton)
+	if (m_SelectedStructure != -1)
 	{
-		if (event->modifiers()&Qt::AltModifier)
+		if (event->buttons()&Qt::LeftButton)
 		{
-			glm::vec4 mouseRay = calculateMouseRay(event->x(), event->y());
-			emit atomMoved(glm::vec3(mouseRay*m_Camera->globalTransMat)*(float)(event->angleDelta().x())/10.0f);
+			if (event->modifiers()&Qt::AltModifier)
+			{
+				glm::vec4 mouseRay = calculateMouseRay(event->x(), event->y());
+				emit atomMoved(glm::vec3(mouseRay*m_Camera->globalTransMat)*(float)(event->angleDelta().x()) / 10.0f);
+			}
 		}
-	}
-	else
-	{
-		m_Camera->moveForward(event->angleDelta().y());
+		else
+		{
+			m_Camera->moveForward(event->angleDelta().y());
+		}
 	}
 	update();
 }
@@ -212,62 +221,65 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
 #if DEBUG
 	std::cout << "keyPressEvent" << std::endl;
 #endif
-	if (event->key() == Qt::Key_Z)
+	if (m_SelectedStructure != -1)
 	{
-		
-		if (event->modifiers() & Qt::AltModifier)
+		if (event->key() == Qt::Key_Z)
 		{
 
-			emit atomMoved(m_Camera->viewDirection);
+			if (event->modifiers() & Qt::AltModifier)
+			{
+
+				emit atomMoved(m_Camera->viewDirection);
+			}
+			else
+			{
+				m_Camera->moveForward();
+			}
 		}
-		else
+		else if (event->key() == Qt::Key_Q)
 		{
-			m_Camera->moveForward();
+			if (event->modifiers()&Qt::AltModifier)
+			{
+				emit atomMoved(-m_Camera->strafeDirection);
+			}
+			else { m_Camera->strafeLeft(); }
+
 		}
-	}
-	else if (event->key() == Qt::Key_Q)
-	{
-		if (event->modifiers()&Qt::AltModifier)
+		else if (event->key() == Qt::Key_D)
 		{
-			emit atomMoved(-m_Camera->strafeDirection);
+			if (event->modifiers()&Qt::AltModifier)
+			{
+				emit atomMoved(m_Camera->strafeDirection);
+			}
+			else { m_Camera->strafeRight(); }
+
 		}
-		else{ m_Camera->strafeLeft(); }
-		
-	}
-	else if (event->key() == Qt::Key_D)
-	{
-		if (event->modifiers()&Qt::AltModifier)
+		else if (event->key() == Qt::Key_S)
 		{
-			emit atomMoved(m_Camera->strafeDirection);
+			if (event->modifiers()&Qt::AltModifier)
+			{
+				emit atomMoved(-m_Camera->viewDirection);
+			}
+			else { m_Camera->moveBackward(); }
+
 		}
-		else { m_Camera->strafeRight(); }
-		
-	}
-	else if (event->key() == Qt::Key_S)
-	{
-		if (event->modifiers()&Qt::AltModifier)
+		else if (event->key() == Qt::Key_R)
 		{
-			emit atomMoved(-m_Camera->viewDirection);
+			if (event->modifiers()&Qt::AltModifier)
+			{
+				emit atomMoved(m_Camera->up);
+			}
+			else { m_Camera->moveUp(); }
+
 		}
-		else { m_Camera->moveBackward(); }
-		
-	}
-	else if (event->key() == Qt::Key_R)
-	{
-		if (event->modifiers()&Qt::AltModifier)
+		else if (event->key() == Qt::Key_F)
 		{
-			emit atomMoved(m_Camera->up);
+			if (event->modifiers()&Qt::AltModifier)
+			{
+				emit atomMoved(-m_Camera->up);
+			}
+			else { m_Camera->moveDown(); }
 		}
-		else { m_Camera->moveUp(); }
-		
-	}
-	else if (event->key() == Qt::Key_F)
-	{
-		if (event->modifiers()&Qt::AltModifier)
-		{
-			emit atomMoved(-m_Camera->up);
-		}
-		else { m_Camera->moveDown(); }
 	}
 	update();
 }
@@ -346,6 +358,7 @@ void GLWidget::render2D()
 	m_2DShader.setUniform4mat("transformMatrix", m_OrthogonalMatrix*m_Camera->transMat2D);
 	for (int i = 0; i < (*m_2DVaos).size(); i++)
 	{
+
 		(*m_2DVaos)[i]->bind();
 		(*m_2DIndBufs)[i]->bind();
 		glDrawElementsInstanced(GL_TRIANGLES, (*m_2DNumVerticesList)[i], GL_UNSIGNED_INT, 0, (*m_2DNumObjectsList)[i]);

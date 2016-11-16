@@ -47,10 +47,10 @@ void Cylinder::genMat()
 void Cylinder::initInfo()
 {
 	objReader reader;
-	normals.reserve(64);
+	normals.reserve(192);
 	indices.reserve(372);
-	vertices.reserve(64);
-    reader.loadOBJ1("src/renderables/cylinder.obj", vertices, indices, normals);
+	vertices.reserve(192);
+    reader.loadOBJ("src/renderables/cylinder.obj", vertices, indices, normals);
  
 }
 

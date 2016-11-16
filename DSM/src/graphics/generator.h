@@ -25,9 +25,10 @@ public:
 	void deleteStructureBuffers(Structure* structure);
     void deleteCylinderBufs(Structure *structure);
 
-	void setupStructureCoordinateSystem(Structure* structure);
+	void initStructureCoordinateSystemBufs(Structure* structure);
+	void setupStructureCoordinateSystemBufs(Structure* structure);
 
-	void createHUDRectangle(glm::vec3 v1,glm::vec3 v2, glm::vec3 colour, std::vector<glm::vec3>* verts,std::vector<glm::vec3>* colours);
+	void createHUDRectangle(glm::vec3 start,float width, float height,glm::vec3 colour, std::vector<glm::vec3>* verts,std::vector<glm::vec3>* colours);
 	void create2DStructureCylinder(glm::vec3 v1, glm::vec3 v2, glm::vec3 colour, VAO* vao, std::vector<VBO*> vbos);
 	void create2DStructureCone(glm::vec3 v1, glm::vec3 v2, glm::vec3 colour, VAO* vao, std::vector<VBO*> vbos);
 	void create2DStructureSphere(glm::vec3 center, float radius, glm::vec3 colour, VAO* vao, std::vector<VBO*> vbos);

@@ -9,6 +9,7 @@ public:
 
 
 	bool loadIN(QString& path, std::vector <Particle> &out_atoms, glm::dmat3 &out_cell);
+	bool loadOUT(QString& path, std::vector <Particle> &out_atoms, glm::dmat3 &out_cell);
 	bool saveStructure(Structure* structure,bool saveAs =false);
 private:
 

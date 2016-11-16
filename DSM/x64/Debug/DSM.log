@@ -1,15 +1,3 @@
-﻿  DSMmainwindow.cpp
-  moc_DSMmainwindow.cpp
-  moc_glwidget.cpp
-  moc_treewidget.cpp
-  moc_createstructurewindow.cpp
-  main.cpp
-  structure.cpp
-  qeIO.cpp
-  generator.cpp
-  glwidget.cpp
-  treewidget.cpp
-  createstructurewindow.cpp
-  Generating Code...
+﻿  glwidget.cpp
   DSM.vcxproj -> C:\Users\ponet\Source\Repos\DSM\DSM\x64\Debug\DSM.exe
   DSM.vcxproj -> C:\Users\ponet\Source\Repos\DSM\DSM\x64\Debug\DSM.pdb (Full PDB)

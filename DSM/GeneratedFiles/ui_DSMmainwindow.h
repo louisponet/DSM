@@ -47,8 +47,8 @@ public:
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     GLWidget *openGLWidget;
-    TreeWidget *treeWidget;
     TableWidget *tableWidget;
+    TreeWidget *treeWidget;
     QTabWidget *tabWidget;
     QWidget *tab1;
     QLabel *label;
@@ -81,7 +81,7 @@ public:
     {
         if (DSMmainwindowClass->objectName().isEmpty())
             DSMmainwindowClass->setObjectName(QStringLiteral("DSMmainwindowClass"));
-        DSMmainwindowClass->resize(1657, 1041);
+        DSMmainwindowClass->resize(1765, 1041);
         actionOpen_Structure = new QAction(DSMmainwindowClass);
         actionOpen_Structure->setObjectName(QStringLiteral("actionOpen_Structure"));
         QIcon icon;
@@ -113,17 +113,7 @@ public:
         openGLWidget = new GLWidget(centralWidget);
         openGLWidget->setObjectName(QStringLiteral("openGLWidget"));
 
-        gridLayout->addWidget(openGLWidget, 0, 1, 3, 1);
-
-        treeWidget = new TreeWidget(centralWidget);
-        QTreeWidgetItem *__qtreewidgetitem = new QTreeWidgetItem();
-        __qtreewidgetitem->setText(0, QStringLiteral("1"));
-        treeWidget->setHeaderItem(__qtreewidgetitem);
-        treeWidget->setObjectName(QStringLiteral("treeWidget"));
-        treeWidget->setMaximumSize(QSize(300, 16777215));
-        treeWidget->header()->setVisible(false);
-
-        gridLayout->addWidget(treeWidget, 0, 0, 1, 1);
+        gridLayout->addWidget(openGLWidget, 0, 1, 4, 1);
 
         tableWidget = new TableWidget(centralWidget);
         if (tableWidget->columnCount() < 1)
@@ -157,7 +147,7 @@ public:
         QTableWidgetItem *__qtablewidgetitem12 = new QTableWidgetItem();
         tableWidget->setItem(5, 0, __qtablewidgetitem12);
         tableWidget->setObjectName(QStringLiteral("tableWidget"));
-        tableWidget->setMinimumSize(QSize(300, 280));
+        tableWidget->setMinimumSize(QSize(320, 280));
         tableWidget->setMaximumSize(QSize(300, 242));
         tableWidget->setLineWidth(1);
         tableWidget->setAlternatingRowColors(false);
@@ -173,7 +163,18 @@ public:
         tableWidget->verticalHeader()->setProperty("showSortIndicator", QVariant(false));
         tableWidget->verticalHeader()->setStretchLastSection(true);
 
-        gridLayout->addWidget(tableWidget, 1, 0, 1, 1);
+        gridLayout->addWidget(tableWidget, 2, 0, 1, 1);
+
+        treeWidget = new TreeWidget(centralWidget);
+        QTreeWidgetItem *__qtreewidgetitem = new QTreeWidgetItem();
+        __qtreewidgetitem->setText(0, QStringLiteral("1"));
+        treeWidget->setHeaderItem(__qtreewidgetitem);
+        treeWidget->setObjectName(QStringLiteral("treeWidget"));
+        treeWidget->setMinimumSize(QSize(320, 0));
+        treeWidget->setMaximumSize(QSize(300, 16777215));
+        treeWidget->header()->setVisible(false);
+
+        gridLayout->addWidget(treeWidget, 1, 0, 1, 1);
 
         tabWidget = new QTabWidget(centralWidget);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
@@ -230,34 +231,34 @@ public:
         tab_2->setObjectName(QStringLiteral("tab_2"));
         checkBox = new QCheckBox(tab_2);
         checkBox->setObjectName(QStringLiteral("checkBox"));
-        checkBox->setGeometry(QRect(10, 20, 111, 23));
+        checkBox->setGeometry(QRect(10, 60, 141, 31));
         checkBox->setTristate(false);
         label_7 = new QLabel(tab_2);
         label_7->setObjectName(QStringLiteral("label_7"));
-        label_7->setGeometry(QRect(120, 20, 81, 23));
+        label_7->setGeometry(QRect(10, 100, 121, 23));
         lineEdit = new QLineEdit(tab_2);
         lineEdit->setObjectName(QStringLiteral("lineEdit"));
-        lineEdit->setGeometry(QRect(220, 20, 71, 24));
+        lineEdit->setGeometry(QRect(160, 100, 71, 24));
         label_8 = new QLabel(tab_2);
         label_8->setObjectName(QStringLiteral("label_8"));
-        label_8->setGeometry(QRect(120, 50, 101, 23));
+        label_8->setGeometry(QRect(10, 130, 141, 23));
         label_9 = new QLabel(tab_2);
         label_9->setObjectName(QStringLiteral("label_9"));
-        label_9->setGeometry(QRect(120, 80, 81, 23));
+        label_9->setGeometry(QRect(10, 160, 111, 23));
         lineEdit_2 = new QLineEdit(tab_2);
         lineEdit_2->setObjectName(QStringLiteral("lineEdit_2"));
-        lineEdit_2->setGeometry(QRect(220, 50, 71, 24));
+        lineEdit_2->setGeometry(QRect(160, 130, 71, 24));
         lineEdit_3 = new QLineEdit(tab_2);
         lineEdit_3->setObjectName(QStringLiteral("lineEdit_3"));
-        lineEdit_3->setGeometry(QRect(220, 80, 71, 24));
+        lineEdit_3->setGeometry(QRect(160, 160, 71, 24));
         tabWidget->addTab(tab_2, QString());
 
-        gridLayout->addWidget(tabWidget, 2, 0, 1, 1);
+        gridLayout->addWidget(tabWidget, 3, 0, 1, 1);
 
         DSMmainwindowClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(DSMmainwindowClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1657, 22));
+        menuBar->setGeometry(QRect(0, 0, 1765, 38));
         menuOpen_Structure = new QMenu(menuBar);
         menuOpen_Structure->setObjectName(QStringLiteral("menuOpen_Structure"));
         menuTools = new QMenu(menuBar);
@@ -300,7 +301,7 @@ public:
         QObject::connect(lineEdit_2, SIGNAL(textEdited(QString)), DSMmainwindowClass, SLOT(bondScaleChanged(QString)));
         QObject::connect(lineEdit_3, SIGNAL(textEdited(QString)), DSMmainwindowClass, SLOT(covaScaleChanged(QString)));
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(DSMmainwindowClass);
